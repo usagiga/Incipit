@@ -1,14 +1,26 @@
+FRONT_DIR=./front
+BACK_DIR=./back
+
 xxx:
 	@echo "Please select optimal option."
 
+front_build:
+	@cd $(FRONT_DIR) && npm run build
+
+front_clean:
+	@cd $(FRONT_DIR) && rm -rf ./dist
+
+front_run:
+	@cd $(FRONT_DIR) && npm run dev
+
 back_build:
-	@go build -o ./back/incipit ./back
+	@cd $(BACK_DIR) && go build -o incipit .
 
 back_clean:
-	@rm -f ./back/incipit
+	@cd $(BACK_DIR) && rm -f ./incipit
 
 back_run:
-	@go run ./back
+	@cd $(BACK_DIR) && go run .
 
 back_test:
-	@go test -v "./back/..."
+	@cd $(BACK_DIR) && go test -v "./..."
