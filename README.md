@@ -1,13 +1,10 @@
-# ${REPO_NAME}
+# Incipit
 
-${REPO_DESC}
+URL shortener service for private use.
 
 
 ## Installation
 
-```sh
-$ go get github.com/usagiga/${REPO_NAME}
-```
 
 
 ## Usage

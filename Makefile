@@ -1,14 +1,14 @@
 xxx:
 	@echo "Please select optimal option."
 
-build:
-	@go build -o go-template .
+back_build:
+	@go build -o ./back/incipit ./back
 
-clean:
-	@rm -f ./go-template
+back_clean:
+	@rm -f ./back/incipit
 
-run:
-	@go run .
+back_run:
+	@go run ./back
 
-test:
-	@go test -v "./..."
+back_test:
+	@go test -v "./back/..."
