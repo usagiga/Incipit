@@ -1,0 +1,28 @@
+version: '3'
+services:
+  h2o:
+    image: lkwg82/h2o-http2-server:v2.2.6
+    ports:
+      - 8080:8080
+    restart: always
+    working_dir: /etc/h2o
+    volumes:
+      - ./docker/h2o/h2o.conf:/etc/h2o/h2o.conf
+  front:
+    build:
+        context: .
+        dockerfile: ./docker/front/Dockerfile
+  back:
+    build:
+      context: .
+      dockerfile: ./docker/back/Dockerfile
+  db:
+    image: mariadb/server:10.4
+    environment:
+      MARIADB_DATABASE: incipit
+      MARIADB_USER: incipit
+      MARIADB_PASS: incipit-password
+      MARIADB_ROOT_PASSWORD: incipit-password
+    restart: always
+    volumes:
+      - ./docker/db/datadir:/var/lib/mysql

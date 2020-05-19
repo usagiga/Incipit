@@ -1,0 +1,14 @@
+version: '3'
+services:
+  back:
+    build:
+      context: .
+      dockerfile: ./docker/back/Dockerfile-Test
+  db:
+    image: mariadb/server:10.4
+    environment:
+      MARIADB_DATABASE: incipit
+      MARIADB_USER: incipit
+      MARIADB_PASS: incipit-password
+      MARIADB_ROOT_PASSWORD: incipit-password
+    restart: always
