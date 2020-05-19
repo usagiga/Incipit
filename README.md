@@ -39,7 +39,7 @@ URL shortener service for private use.
 
 ### Infrastructure
 
-- nginx
+- h2o
 - Docker
     - Compose
 
