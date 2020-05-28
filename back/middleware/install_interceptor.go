@@ -10,7 +10,7 @@ func NewInstallInterceptor() InstallInterceptor {
 	return &InstallInterceptorImpl{}
 }
 
-func (m *InstallInterceptorImpl) Handle(c *interface{}) {
+func (m *InstallInterceptorImpl) Handle(c *gin.Context) {
 	panic("implement me")
 }
 
