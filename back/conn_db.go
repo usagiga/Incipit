@@ -8,7 +8,7 @@ import (
 )
 
 func ConnectToDB(userName, password, host string, port int) *gorm.DB {
-	connAddr := fmt.Sprintf("%s:%s@(%s:%d)/incipit?charset=utf8&parseTime=True", userName, password, host, port)
+	connAddr := fmt.Sprintf("%s:%s@tcp(%s:%d)/incipit?charset=utf8mb4&parseTime=true", userName, password, host, port)
 	dbChan := make(chan *gorm.DB)
 	dbInit := broker.Default()
 

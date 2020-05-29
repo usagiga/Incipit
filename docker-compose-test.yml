@@ -9,6 +9,6 @@ services:
     environment:
       MARIADB_DATABASE: incipit
       MARIADB_USER: incipit
-      MARIADB_PASS: incipit-password
+      MARIADB_PASSWORD: incipit-password
       MARIADB_ROOT_PASSWORD: incipit-password
     restart: always

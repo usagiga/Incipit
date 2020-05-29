@@ -24,7 +24,7 @@ func (b *DBBroker) Open(dbChan chan *gorm.DB, dialect string, args ...interface{
 
 	for i := 1; i <= maxRetry; i++ {
 		// Try to conn
-		db, err := gorm.Open(dialect, args)
+		db, err := gorm.Open(dialect, args...)
 
 		// If error occurred, retry after exponential time
 		if err != nil {
