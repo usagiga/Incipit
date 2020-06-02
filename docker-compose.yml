@@ -16,6 +16,8 @@ services:
     build:
       context: .
       dockerfile: ./docker/back/Dockerfile
+    volumes:
+      - .:/go/src/github.com/usagiga/Incipit
   db:
     image: mariadb/server:10.4
     environment:
