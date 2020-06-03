@@ -165,6 +165,55 @@ func TestAdminModelImpl_FindOne(t *testing.T) {
 	}
 }
 
+func TestAdminModelImpl_FindOneByName(t *testing.T) {
+	// Initialize model
+	am, amFin := initAdminModel(t)
+	defer amFin()
+
+	// Declare test cases
+	testCases := []struct {
+		IsExpectedError bool
+		TestingName     string
+		ExpectedValue   *entity.AdminUser
+	}{
+		{
+			IsExpectedError: false,
+			TestingName:     "user_2",
+			ExpectedValue:   &entity.AdminUser{Name: "user_2", ScreenName: "screen_2", Password: "password_2", Model: gorm.Model{ID: 2}},
+		},
+		{
+			IsExpectedError: false,
+			TestingName:     "not_existed_user",
+			ExpectedValue:   nil,
+		},
+	}
+
+	// Do test
+	for i, v := range testCases {
+		caseNum := i + 1
+		isExpectedError := v.IsExpectedError
+		findingName := v.TestingName
+		expectedVal := v.ExpectedValue
+
+		actualVal, err := am.FindOneByName(findingName)
+
+		// When raising NOT expected error
+		if err != nil && !isExpectedError {
+			t.Fatalf("Case %d: This case is not expected to raise error, but error raised; %v", caseNum, err)
+		}
+
+		// When NOT raising expected error
+		if err == nil && isExpectedError {
+			t.Fatalf("Case %d: This case is expected to raise error, but error didn't raised", caseNum)
+		}
+
+		// When actual value isn't equal expected value
+		if !adminUserEquals(expectedVal, actualVal) {
+			t.Fatalf("Case %d: Actual value isn't equal expected value.\nExpected:\t%v,\nActual:\t%v", caseNum, expectedVal, actualVal)
+		}
+	}
+}
+
 func TestAdminModelImpl_Update(t *testing.T) {
 	// Initialize model
 	am, amFin := initAdminModel(t)
