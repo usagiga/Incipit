@@ -38,7 +38,7 @@ type AdminAuthModel interface {
 
 // LinkModel treats CRUD of shortened link.
 type LinkModel interface {
-	Add(user *entity.Link) (added *entity.Link, err error)
+	Add(link *entity.Link) (added *entity.Link, err error)
 	FindOne(id uint) (link *entity.Link, err error)
 	Find() (links []entity.Link, err error)
 	Update(updating *entity.Link) (updated *entity.Link, err error)
