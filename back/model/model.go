@@ -24,7 +24,7 @@ type AdminModel interface {
 
 // AdminAuthModel treats authentication for admin user.
 type AdminAuthModel interface {
-	Authorize(accToken *entity.AccessToken) (user *entity.AdminUser, err error)
+	Authorize(accTokenStr string) (user *entity.AdminUser, err error)
 	Login(name, password string) (
 		accToken *entity.AccessToken,
 		refToken *entity.RefreshToken,
