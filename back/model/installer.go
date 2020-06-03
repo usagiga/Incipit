@@ -5,7 +5,8 @@ import (
 )
 
 type InstallerModelImpl struct {
-
+	adminModel     AdminModel
+	adminAuthModel AdminAuthModel
 }
 
 func NewInstallerModel(adminModel AdminModel, adminAuthModel AdminAuthModel) InstallerModel {
@@ -13,5 +14,23 @@ func NewInstallerModel(adminModel AdminModel, adminAuthModel AdminAuthModel) Ins
 }
 
 func (m *InstallerModelImpl) CreateNewAdmin(name, screenName, password string) (accToken *entity.AccessToken, refToken *entity.RefreshToken, err error) {
-	panic("implement me")
+	newUser := &entity.AdminUser{
+		Name:       name,
+		ScreenName: screenName,
+		Password:   password,
+	}
+
+	// Add AdminUser
+	_, err = m.adminModel.Add(newUser)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	// Login
+	accToken, refToken, err = m.adminAuthModel.Login(name, password)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return accToken, refToken, nil
 }
