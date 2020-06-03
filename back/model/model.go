@@ -5,7 +5,7 @@ import "github.com/usagiga/Incipit/back/entity"
 // InstallerModel treats starting to use Incipit.
 // If there's no admin, this will be called.
 type InstallerModel interface {
-	CreateNewAdmin(email, password string) (
+	CreateNewAdmin(name, screenName, password string) (
 		accToken *entity.AccessToken,
 		refToken *entity.RefreshToken,
 		err error,
