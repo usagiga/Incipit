@@ -44,3 +44,9 @@ type LinkModel interface {
 	Update(updating *entity.Link) (updated *entity.Link, err error)
 	Delete(id uint) (err error)
 }
+
+// HashModel treats hashing and validating for password.
+type HashModel interface {
+	Generate(pass string) (hashed string)
+	Equals(x, y string) (isEqual bool)
+}
