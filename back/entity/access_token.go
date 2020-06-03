@@ -9,12 +9,12 @@ import (
 type AccessToken struct {
 	gorm.Model
 	Token     string
-	ExpiredAt *time.Time
+	ExpiredAt time.Time
 
 	AdminUserID uint
 	AdminUser   AdminUser
 }
 
-func (at *AccessToken) IsExpired(time *time.Time) (isExpired bool) {
-	return at.ExpiredAt.Before(*time)
+func (at *AccessToken) IsExpired(time time.Time) (isExpired bool) {
+	return at.ExpiredAt.Before(time)
 }
