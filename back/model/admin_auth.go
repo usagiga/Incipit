@@ -49,8 +49,6 @@ func (m *AdminAuthModelImpl) Authorize(accTokenStr string) (user *entity.AdminUs
 }
 
 func (m *AdminAuthModelImpl) Login(name, password string) (accToken *entity.AccessToken, refToken *entity.RefreshToken, err error) {
-	hashedPassword := m.hashModel.Generate(password)
-
 	// Find specified user
 	user, err := m.adminModel.FindOneByName(name)
 	if err != nil {
@@ -61,7 +59,8 @@ func (m *AdminAuthModelImpl) Login(name, password string) (accToken *entity.Acce
 	}
 
 	// Check its password equals specified password
-	if !m.hashModel.Equals(user.Password, hashedPassword) {
+	err = m.hashModel.Equals(user.Password, password)
+	if err != nil {
 		return nil, nil, errors.New("AdminAuthModel.Login(): Not authorized")
 	}
 

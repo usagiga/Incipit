@@ -48,6 +48,6 @@ type LinkModel interface {
 
 // HashModel treats hashing and validating for password.
 type HashModel interface {
-	Generate(pass string) (hashed string)
-	Equals(x, y string) (isEqual bool)
+	Generate(pass string) (hashed string, err error)
+	Equals(hashedPassword, rawPassword string) (err error)
 }
