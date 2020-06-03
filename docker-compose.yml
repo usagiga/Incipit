@@ -16,6 +16,9 @@ services:
     build:
       context: .
       dockerfile: ./docker/back/Dockerfile
+    environment:
+      INCIPIT_DB_HOST: db
+      INCIPIT_DB_PORT: 3306
     volumes:
       - .:/go/src/github.com/usagiga/Incipit
   db:

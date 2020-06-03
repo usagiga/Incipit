@@ -32,3 +32,6 @@ jobs:
         run: make back_build
       - name: Run go test
         run: make back_test
+        env:
+          INCIPIT_DB_HOST: 127.0.0.1
+          INCIPIT_DB_PORT: 3306
