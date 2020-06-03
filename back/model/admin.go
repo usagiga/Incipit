@@ -7,16 +7,24 @@ import (
 )
 
 type AdminModelImpl struct {
-	db *gorm.DB
+	db        *gorm.DB
+	hashModel HashModel
 }
 
-func NewAdminModel(db *gorm.DB) AdminModel {
+func NewAdminModel(db *gorm.DB, hashModel HashModel) AdminModel {
 	return &AdminModelImpl{
-		db: db,
+		db:        db,
+		hashModel: hashModel,
 	}
 }
 
 func (m *AdminModelImpl) Add(user *entity.AdminUser) (added *entity.AdminUser, err error) {
+	// Generate hash of password
+	user.Password, err = m.hashModel.Generate(user.Password)
+	if err != nil {
+		return nil, err
+	}
+
 	// Add the row
 	result := m.db.Create(user)
 	err = result.Error
@@ -85,6 +93,14 @@ func (m *AdminModelImpl) Update(updating *entity.AdminUser) (updated *entity.Adm
 	}
 	if found == nil {
 		return nil, errors.New("AdminModel.Update(): Not found updating row")
+	}
+
+	// If password isn't default value, generate hash of password
+	if updating.Password != "" {
+		updating.Password, err = m.hashModel.Generate(updating.Password)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	// Update the row

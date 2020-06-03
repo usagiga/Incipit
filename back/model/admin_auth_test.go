@@ -253,22 +253,43 @@ func (a *adminModelStub) Delete(id uint) (err error) {
 
 type hashModelStub struct{}
 
-func (h *hashModelStub) Generate(pass string) (hashed string) {
+func (h *hashModelStub) Generate(pass string) (hashed string, err error) {
 	if pass == "password_1" {
-		return "hashed_password_1"
+		return "hashed_password_1", nil
 	}
 
 	if pass == "password_2" {
-		return "hashed_password_2"
+		return "hashed_password_2", nil
+	}
+
+	if pass == "password_3" {
+		return "hashed_password_3", nil
 	}
 
 	if pass == "error_password" {
-		return "hashed_error_password"
+		return "hashed_error_password", nil
 	}
 
-	panic("hashModelStub.Generate(): Specified password isn't expected as test case")
+	return "", errors.New("hashModelStub.Generate(): Specified password isn't expected as test case")
 }
 
-func (h *hashModelStub) Equals(x, y string) (isEqual bool) {
-	return x == y
+func (h *hashModelStub) Equals(hashedPassword, rawPassword string) (err error) {
+	if hashedPassword == "hashed_password_1" && rawPassword == "password_1" {
+		return nil
+	}
+
+	if hashedPassword == "hashed_password_2" && rawPassword == "password_2" {
+		return nil
+	}
+
+	if hashedPassword == "hashed_password_3" && rawPassword == "password_3" {
+		return nil
+
+	}
+
+	if hashedPassword == "hashed_error_password" && rawPassword == "error_password" {
+		return nil
+	}
+
+	return errors.New("hashModelStub.Generate(): Specified password isn't expected as test case")
 }

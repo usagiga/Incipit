@@ -27,7 +27,7 @@ func initAdminModel(t *testing.T) (am AdminModel, finalizer testutils.Finalizer)
 		}
 	}
 
-	return &AdminModelImpl{db}, dbFin
+	return &AdminModelImpl{db: db, hashModel: &hashModelStub{}}, dbFin
 }
 
 func adminUserEquals(x *entity.AdminUser, y *entity.AdminUser) bool {
@@ -65,8 +65,8 @@ func TestAdminModelImpl_Add(t *testing.T) {
 	}{
 		{
 			IsExpectedError: false,
-			TestingValue:    &entity.AdminUser{Name: "added_name", ScreenName: "added_screen_name", Password: "added_pass"},
-			ExpectingValue:  &entity.AdminUser{Name: "added_name", ScreenName: "added_screen_name", Password: "added_pass", Model: gorm.Model{ID: 4}},
+			TestingValue:    &entity.AdminUser{Name: "user_1", ScreenName: "screen_1", Password: "password_1"},
+			ExpectingValue:  &entity.AdminUser{Name: "user_1", ScreenName: "screen_1", Password: "hashed_password_1", Model: gorm.Model{ID: 4}},
 		},
 	}
 
@@ -227,13 +227,13 @@ func TestAdminModelImpl_Update(t *testing.T) {
 	}{
 		{
 			IsExpectedError: false,
-			TestingValue:    &entity.AdminUser{Name: "updated_name", ScreenName: "updated_screen_name", Password: "updated_pass", Model: gorm.Model{ID: 2}},
-			ExpectingValue:  &entity.AdminUser{Name: "updated_name", ScreenName: "updated_screen_name", Password: "updated_pass", Model: gorm.Model{ID: 2}},
+			TestingValue:    &entity.AdminUser{Name: "updated_name", ScreenName: "updated_screen_name", Password: "password_3", Model: gorm.Model{ID: 2}},
+			ExpectingValue:  &entity.AdminUser{Name: "updated_name", ScreenName: "updated_screen_name", Password: "hashed_password_3", Model: gorm.Model{ID: 2}},
 		},
 		{
 			IsExpectedError: false,
 			TestingValue:    &entity.AdminUser{Name: "user_1", ScreenName: "screen_1", Password: "password_1", Model: gorm.Model{ID: 1}},
-			ExpectingValue:  &entity.AdminUser{Name: "user_1", ScreenName: "screen_1", Password: "password_1", Model: gorm.Model{ID: 1}},
+			ExpectingValue:  &entity.AdminUser{Name: "user_1", ScreenName: "screen_1", Password: "hashed_password_1", Model: gorm.Model{ID: 1}},
 		},
 		{
 			IsExpectedError: true,
