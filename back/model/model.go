@@ -16,6 +16,7 @@ type InstallerModel interface {
 type AdminModel interface {
 	Add(user *entity.AdminUser) (added *entity.AdminUser, err error)
 	FindOne(id uint) (user *entity.AdminUser, err error)
+	FindOneByName(name string) (user *entity.AdminUser, err error)
 	Find() (users []entity.AdminUser, err error)
 	Update(updating *entity.AdminUser) (updated *entity.AdminUser, err error)
 	Delete(id uint) (err error)
