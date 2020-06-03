@@ -46,6 +46,23 @@ func (m *AdminModelImpl) FindOne(id uint) (user *entity.AdminUser, err error) {
 	return user, err
 }
 
+func (m *AdminModelImpl) FindOneByName(name string) (user *entity.AdminUser, err error) {
+	user = &entity.AdminUser{}
+	condition := &entity.AdminUser{Name: name}
+
+	// Find the row with the condition
+	result := m.db.Where(condition).First(user)
+	err = result.Error
+	if result.RecordNotFound() {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+
+	return user, err
+}
+
 func (m *AdminModelImpl) Find() (users []entity.AdminUser, err error) {
 	// Find all rows
 	result := m.db.Find(&users)
