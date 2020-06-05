@@ -29,7 +29,7 @@ func Load(out interface{}) (err error) {
 		// Look up env
 		envStrVal, ok := os.LookupEnv(envKey)
 		if !ok || envKey == "" {
-			errMsg := fmt.Sprint("[Config] environment variable is not set or something wrong.")
+			errMsg := fmt.Sprint("[Config] environment variable is not set or something went wrong.")
 			return errors.New(errMsg)
 		}
 
