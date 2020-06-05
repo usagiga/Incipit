@@ -71,7 +71,7 @@ func New(config *Config) *DBBroker {
 
 func Default() *DBBroker {
 	defaultConfig := &Config{
-		MaxRetry: 5,
+		MaxRetry: 10,
 
 		MaxOpenConn:     10,
 		MaxIdleConn:     100,
