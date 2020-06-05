@@ -5,8 +5,10 @@ services:
       context: .
       dockerfile: ./docker/back/Dockerfile-Test
     environment:
-      INCIPIT_DB_HOST: db
-      INCIPIT_DB_PORT: 3306
+      INCIPIT_MYSQL_HOST: db
+      INCIPIT_MYSQL_PORT: 3306
+      INCIPIT_MYSQL_USER: incipit
+      INCIPIT_MYSQL_PASS: incipit-password
     volumes:
       - .:/go/src/github.com/usagiga/Incipit
   db:

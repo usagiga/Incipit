@@ -33,5 +33,7 @@ jobs:
       - name: Run go test
         run: make back_test
         env:
-          INCIPIT_DB_HOST: 127.0.0.1
-          INCIPIT_DB_PORT: 3306
+          INCIPIT_MYSQL_HOST: 127.0.0.1
+          INCIPIT_MYSQL_PORT: 3306
+          INCIPIT_MYSQL_USER: incipit
+          INCIPIT_MYSQL_PASS: incipit-password
