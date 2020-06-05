@@ -8,9 +8,16 @@ import (
 // SetupTestDB connects and migrates DB,
 // then passes `Finalizer` which drops tables and closes connection
 func SetupTestDB(t *testing.T) (db *gorm.DB, finalizer Finalizer) {
+	// Load config
+	config, err := LoadTestConfig()
+	if err != nil {
+		t.Fatal("SetUpDB(): Can't load config; ", err)
+		return nil, nil
+	}
+
 	// Initialize DB
-	db, dbFin := ConnectToTestDB()
-	err := MigrateTestDB(db)
+	db, dbFin := ConnectToTestDB(config)
+	err = MigrateTestDB(db)
 	if err != nil {
 		dbFin()
 		t.Fatal("SetUpDB(): Can't migrate DB; ", err)

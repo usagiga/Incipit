@@ -4,18 +4,18 @@ import (
 	"fmt"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"github.com/usagiga/Incipit/back/entity"
 	"github.com/usagiga/Incipit/back/lib/broker"
 )
 
-const (
-	dbUserName = "incipit"
-	dbPassword = "incipit-password"
-	dbHost = "db"
-	dbPort = 3306
-)
-
-func ConnectToTestDB() (db *gorm.DB, finalizer Finalizer) {
-	connAddr := fmt.Sprintf("%s:%s@tcp(%s:%d)/incipit?charset=utf8mb4&parseTime=true", dbUserName, dbPassword, dbHost, dbPort)
+func ConnectToTestDB(config *entity.Config) (db *gorm.DB, finalizer Finalizer) {
+	connAddr := fmt.Sprintf(
+		"%s:%s@tcp(%s:%d)/incipit?charset=utf8mb4&parseTime=true",
+		config.MySQLUser,
+		config.MySQLPassword,
+		config.MySQLHost,
+		config.MySQLPort,
+	)
 	dbChan := make(chan *gorm.DB)
 	dbInit := broker.Default()
 
