@@ -1,15 +1,14 @@
 package main
 
-import "testing"
+import (
+	"github.com/usagiga/Incipit/back/lib/testutils"
+	"testing"
+)
 
 func TestMigrate(t *testing.T) {
-	mysqlUser := "incipit"
-	mysqlPass := "incipit-password"
-	mysqlHost := "db"
-	mysqlPort := 3306
-
-	// Connect to DB
-	db := ConnectToDB(mysqlUser, mysqlPass, mysqlHost, mysqlPort)
+	// Initialize db
+	db, dbFin := testutils.SetupTestDB(t)
+	defer dbFin()
 
 	// Migrate
 	err := Migrate(db)
