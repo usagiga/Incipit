@@ -1,10 +1,11 @@
 package model
 
 import (
-	"errors"
 	"github.com/jinzhu/gorm"
 	uuid "github.com/satori/go.uuid"
 	"github.com/usagiga/Incipit/back/entity"
+	interr "github.com/usagiga/Incipit/back/entity/errors"
+	"golang.org/x/xerrors"
 	"time"
 )
 
@@ -34,15 +35,15 @@ func (m *AdminAuthModelImpl) Authorize(accTokenStr string) (user *entity.AdminUs
 	result := m.db.Preload("AdminUser").Where(&entity.AccessToken{Token: accTokenStr}).First(foundToken)
 	err = result.Error
 	if result.RecordNotFound() {
-		return nil, errors.New("AdminAuthModel.Authorize(): There's no token")
+		return nil, interr.NewDistinctError("There's no token", interr.AdminAuthModel, interr.AdminAuthModel_FailedToFindUser, nil).Wrap(err)
 	}
 	if err != nil {
-		return nil, err
+		return nil, interr.NewDistinctError("Can't find token", interr.AdminAuthModel, interr.AdminAuthModel_FailedToFindUser, nil).Wrap(err)
 	}
 
 	// Check it is expired
 	if foundToken.IsExpired(now) {
-		return nil, errors.New("AdminAuthModel.Authorize(): This token is expired")
+		return nil, interr.NewDistinctError("This token is expired", interr.AdminAuthModel, interr.AdminAuthModel_ExpiredToken, nil)
 	}
 
 	return &foundToken.AdminUser, nil
@@ -52,23 +53,23 @@ func (m *AdminAuthModelImpl) Login(name, password string) (accToken *entity.Acce
 	// Find specified user
 	user, err := m.adminModel.FindOneByName(name)
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, interr.NewDistinctError("Can't find user by token", interr.AdminAuthModel, interr.AdminAuthModel_FailedToFindUser, nil).Wrap(err)
 	}
 	if user == nil {
-		return nil, nil, errors.New("AdminAuthModel.Login(): There's no user")
+		return nil, nil, interr.NewDistinctError("There's no user", interr.AdminAuthModel, interr.AdminAuthModel_FailedToFindUser, nil)
 	}
 
 	// Check its password equals specified password
 	err = m.hashModel.Equals(user.Password, password)
 	if err != nil {
-		return nil, nil, errors.New("AdminAuthModel.Login(): Not authorized")
+		return nil, nil, interr.NewDistinctError("Don't match password", interr.AdminAuthModel, interr.AdminAuthModel_UnmatchPassword, nil).Wrap(err)
 	}
 
 	// Generate Access / Refresh Token
 	accToken, refToken = m.generateTokenPair(user.ID)
 	err = m.saveTokenPair(accToken, refToken)
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, interr.NewDistinctError("Can't save token pair", interr.AdminAuthModel, interr.AdminAuthModel_FailedToStoreToken, nil).Wrap(err)
 	}
 
 	return accToken, refToken, nil
@@ -82,22 +83,22 @@ func (m *AdminAuthModelImpl) RenewAccessToken(refTokenStr string) (accToken *ent
 	result := m.db.Preload("AdminUser").Where(&entity.RefreshToken{Token: refTokenStr}).First(foundToken)
 	err = result.Error
 	if result.RecordNotFound() {
-		return nil, nil, errors.New("AdminAuthModel.RenewAccessToken(): There's no token")
+		return nil, nil, interr.NewDistinctError("There's no token", interr.AdminAuthModel, interr.AdminAuthModel_FailedToFindUser, nil).Wrap(err)
 	}
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, interr.NewDistinctError("Can't find token", interr.AdminAuthModel, interr.AdminAuthModel_FailedToFindUser, nil).Wrap(err)
 	}
 
 	// Check it is expired
 	if foundToken.IsExpired(now) {
-		return nil, nil, errors.New("AdminAuthModel.RenewAccessToken(): This token is expired")
+		return nil, nil, interr.NewDistinctError("This token is expired", interr.AdminAuthModel, interr.AdminAuthModel_ExpiredToken, nil)
 	}
 
 	// Generate access / refresh token
 	accToken, refToken = m.generateTokenPair(foundToken.AdminUserID)
 	err = m.saveTokenPair(accToken, refToken)
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, interr.NewDistinctError("Can't save token pair", interr.AdminAuthModel, interr.AdminAuthModel_FailedToStoreToken, nil).Wrap(err)
 	}
 
 	return accToken, refToken, nil
@@ -136,25 +137,25 @@ func (m *AdminAuthModelImpl) saveTokenPair(accToken *entity.AccessToken, refToke
 
 	err = tx.Error
 	if err != nil {
-		return err
+		return xerrors.Errorf("Can't begin transaction: %w", err)
 	}
 
 	err = tx.Create(accToken).Error
 	if err != nil {
 		tx.Rollback()
-		return err
+		return xerrors.Errorf("Can't add access token: %w", err)
 	}
 
 	err = tx.Create(refToken).Error
 	if err != nil {
 		tx.Rollback()
-		return err
+		return xerrors.Errorf("Can't add refresh token: %w", err)
 	}
 
 	err = tx.Commit().Error
 	if err != nil {
 		tx.Rollback()
-		return err
+		return xerrors.Errorf("Can't commit transaction: %w", err)
 	}
 
 	return nil
