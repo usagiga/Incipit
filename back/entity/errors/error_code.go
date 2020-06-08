@@ -54,10 +54,10 @@ const (
 	AdminModel_FailedDelete         SecondaryErrorCode = 0401
 
 	// AdminAuthModel
-	AdminAuthModel_FailedToFindUser      SecondaryErrorCode = 0101
-	AdminAuthModel_UnmatchPassword       SecondaryErrorCode = 0102
-	AdminAuthModel_ExpiredToken          SecondaryErrorCode = 0103
-	AdminAuthModel_FailedToGenerateToken SecondaryErrorCode = 0104
+	AdminAuthModel_FailedToFindUser   SecondaryErrorCode = 0101
+	AdminAuthModel_UnmatchPassword    SecondaryErrorCode = 0102
+	AdminAuthModel_ExpiredToken       SecondaryErrorCode = 0103
+	AdminAuthModel_FailedToStoreToken SecondaryErrorCode = 0104
 
 	// HashModel
 	HashModel_FailedGenerate SecondaryErrorCode = 0101
