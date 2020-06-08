@@ -1,9 +1,10 @@
 package model
 
 import (
-	"errors"
 	"github.com/jinzhu/gorm"
 	"github.com/usagiga/Incipit/back/entity"
+	interr "github.com/usagiga/Incipit/back/entity/errors"
+	"golang.org/x/xerrors"
 )
 
 type AdminModelImpl struct {
@@ -22,20 +23,17 @@ func (m *AdminModelImpl) Add(user *entity.AdminUser) (added *entity.AdminUser, e
 	// Generate hash of password
 	user.Password, err = m.hashModel.Generate(user.Password)
 	if err != nil {
-		return nil, err
+		return nil, xerrors.Errorf("Can't hash password: %w", err)
 	}
 
 	// Add the row
 	result := m.db.Create(user)
 	err = result.Error
-	if err != nil {
-		return nil, err
-	}
-	if result.RowsAffected <= 0 {
-		return nil, errors.New("AdminModel.Add(): Can't add it")
+	if err != nil || result.RowsAffected <= 0 {
+		return nil, interr.NewDistinctError("Can't add user", interr.AdminModel, interr.AdminModel_FailedAdd, nil).Wrap(err)
 	}
 
-	return user, err
+	return user, nil
 }
 
 func (m *AdminModelImpl) FindOne(id uint) (user *entity.AdminUser, err error) {
@@ -48,10 +46,10 @@ func (m *AdminModelImpl) FindOne(id uint) (user *entity.AdminUser, err error) {
 		return nil, nil
 	}
 	if err != nil {
-		return nil, err
+		return nil, interr.NewDistinctError("Can't find user", interr.AdminModel, interr.AdminModel_FailedFind, nil).Wrap(err)
 	}
 
-	return user, err
+	return user, nil
 }
 
 func (m *AdminModelImpl) FindOneByName(name string) (user *entity.AdminUser, err error) {
@@ -65,10 +63,10 @@ func (m *AdminModelImpl) FindOneByName(name string) (user *entity.AdminUser, err
 		return nil, nil
 	}
 	if err != nil {
-		return nil, err
+		return nil, interr.NewDistinctError("Can't find user", interr.AdminModel, interr.AdminModel_FailedFind, nil).Wrap(err)
 	}
 
-	return user, err
+	return user, nil
 }
 
 func (m *AdminModelImpl) Find() (users []entity.AdminUser, err error) {
@@ -79,27 +77,28 @@ func (m *AdminModelImpl) Find() (users []entity.AdminUser, err error) {
 		return nil, nil
 	}
 	if err != nil {
-		return nil, err
+		return nil, interr.NewDistinctError("Can't find user", interr.AdminModel, interr.AdminModel_FailedFind, nil).Wrap(err)
 	}
 
-	return users, err
+	return users, nil
 }
 
 func (m *AdminModelImpl) Update(updating *entity.AdminUser) (updated *entity.AdminUser, err error) {
 	// Finding the row
 	found, err := m.FindOne(updating.ID)
 	if err != nil {
-		return nil, err
+		return nil, interr.NewDistinctError("Can't find user", interr.AdminModel, interr.AdminModel_UpdatingUserNotFound, nil).Wrap(err)
 	}
+
 	if found == nil {
-		return nil, errors.New("AdminModel.Update(): Not found updating row")
+		return nil, interr.NewDistinctError("Can't find user", interr.AdminModel, interr.AdminModel_UpdatingUserNotFound, nil)
 	}
 
 	// If password isn't default value, generate hash of password
 	if updating.Password != "" {
 		updating.Password, err = m.hashModel.Generate(updating.Password)
 		if err != nil {
-			return nil, err
+			return nil, xerrors.Errorf("Can't hash password: %w", err)
 		}
 	}
 
@@ -107,13 +106,14 @@ func (m *AdminModelImpl) Update(updating *entity.AdminUser) (updated *entity.Adm
 	result := m.db.Model(&entity.AdminUser{}).Update(updating)
 	err = result.Error
 	if err != nil {
-		return nil, err
+		return nil, interr.NewDistinctError("Can't update user", interr.AdminModel, interr.AdminModel_FailedUpdate, nil).Wrap(err)
 	}
 	if result.RowsAffected <= 0 {
+		// There's no value to change
 		return updating, nil
 	}
 
-	return updating, err
+	return updating, nil
 }
 
 func (m *AdminModelImpl) Delete(id uint) (err error) {
@@ -121,10 +121,10 @@ func (m *AdminModelImpl) Delete(id uint) (err error) {
 	result := m.db.Unscoped().Delete(&entity.AdminUser{}, id)
 	err = result.Error
 	if err != nil {
-		return nil
+		return interr.NewDistinctError("Can't delete user", interr.AdminModel, interr.AdminModel_FailedDelete, nil)
 	}
 	if result.RowsAffected <= 0 {
-		return errors.New("AdminModel.Delete(): Can't delete it")
+		return interr.NewDistinctError("Can't delete user", interr.AdminModel, interr.AdminModel_FailedDelete, nil).Wrap(err)
 	}
 
 	return nil
