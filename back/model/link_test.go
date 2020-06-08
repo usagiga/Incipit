@@ -132,7 +132,7 @@ func TestLinkModelImpl_FindOne(t *testing.T) {
 			ExpectedValue:   &entity.Link{URL: "https://example.com/2/", Model: gorm.Model{ID: 2}},
 		},
 		{
-			IsExpectedError: false,
+			IsExpectedError: true,
 			TestingID:       10,
 			ExpectedValue:   nil,
 		},

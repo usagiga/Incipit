@@ -10,8 +10,8 @@ type LinkModelImpl struct {
 	db *gorm.DB
 }
 
-func NewLinkModel() LinkModel {
-	return &LinkModelImpl{}
+func NewLinkModel(db *gorm.DB) LinkModel {
+	return &LinkModelImpl{db: db}
 }
 
 func (m *LinkModelImpl) Add(link *entity.Link) (added *entity.Link, err error) {
@@ -35,7 +35,7 @@ func (m *LinkModelImpl) FindOne(id uint) (link *entity.Link, err error) {
 	result := m.db.First(link, id)
 	err = result.Error
 	if result.RecordNotFound() {
-		return nil, nil
+		return nil, interr.NewDistinctError("Link isn't found", interr.LinkModel, interr.LinkModel_FindingLinkNotFound, nil).Wrap(err)
 	}
 	if err != nil {
 		return nil, interr.NewDistinctError("Can't find link", interr.LinkModel, interr.LinkModel_FailedFind, nil).Wrap(err)
@@ -49,7 +49,7 @@ func (m *LinkModelImpl) Find() (links []entity.Link, err error) {
 	result := m.db.Find(&links)
 	err = result.Error
 	if result.RecordNotFound() {
-		return nil, nil
+		return nil, interr.NewDistinctError("Link aren't found", interr.LinkModel, interr.LinkModel_FindingLinkNotFound, nil).Wrap(err)
 	}
 	if err != nil {
 		return nil, interr.NewDistinctError("Can't find link", interr.LinkModel, interr.LinkModel_FailedFind, nil).Wrap(err)
@@ -60,12 +60,9 @@ func (m *LinkModelImpl) Find() (links []entity.Link, err error) {
 
 func (m *LinkModelImpl) Update(updating *entity.Link) (updated *entity.Link, err error) {
 	// Finding the row
-	found, err := m.FindOne(updating.ID)
+	_, err = m.FindOne(updating.ID)
 	if err != nil {
 		return nil, interr.NewDistinctError("Can't find link", interr.LinkModel, interr.LinkModel_UpdatingLinkNotFound, nil).Wrap(err)
-	}
-	if found == nil {
-		return nil, interr.NewDistinctError("Can't find link", interr.LinkModel, interr.LinkModel_UpdatingLinkNotFound, nil)
 	}
 
 	// Update the row
