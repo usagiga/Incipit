@@ -2,6 +2,7 @@ package model
 
 import (
 	"github.com/usagiga/Incipit/back/entity"
+	"golang.org/x/xerrors"
 )
 
 type InstallerModelImpl struct {
@@ -23,13 +24,13 @@ func (m *InstallerModelImpl) CreateNewAdmin(name, screenName, password string) (
 	// Add AdminUser
 	_, err = m.adminModel.Add(newUser)
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, xerrors.Errorf("Can't add first admin: %w", err)
 	}
 
 	// Login
 	accToken, refToken, err = m.adminAuthModel.Login(name, password)
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, xerrors.Errorf("Can't login first admin: %w", err)
 	}
 
 	return accToken, refToken, nil
