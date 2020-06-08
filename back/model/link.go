@@ -1,9 +1,9 @@
 package model
 
 import (
-	"errors"
 	"github.com/jinzhu/gorm"
 	"github.com/usagiga/Incipit/back/entity"
+	interr "github.com/usagiga/Incipit/back/entity/errors"
 )
 
 type LinkModelImpl struct {
@@ -19,13 +19,13 @@ func (m *LinkModelImpl) Add(link *entity.Link) (added *entity.Link, err error) {
 	result := m.db.Create(link)
 	err = result.Error
 	if err != nil {
-		return nil, err
+		return nil, interr.NewDistinctError("Can't add link", interr.LinkModel, interr.LinkModel_FailedAdd, nil).Wrap(err)
 	}
 	if result.RowsAffected <= 0 {
-		return nil, errors.New("LinkModel.Add(): Can't add it")
+		return nil, interr.NewDistinctError("Can't add link", interr.LinkModel, interr.LinkModel_FailedAdd, nil)
 	}
 
-	return link, err
+	return link, nil
 }
 
 func (m *LinkModelImpl) FindOne(id uint) (link *entity.Link, err error) {
@@ -38,10 +38,10 @@ func (m *LinkModelImpl) FindOne(id uint) (link *entity.Link, err error) {
 		return nil, nil
 	}
 	if err != nil {
-		return nil, err
+		return nil, interr.NewDistinctError("Can't find link", interr.LinkModel, interr.LinkModel_FailedFind, nil).Wrap(err)
 	}
 
-	return link, err
+	return link, nil
 }
 
 func (m *LinkModelImpl) Find() (links []entity.Link, err error) {
@@ -52,33 +52,34 @@ func (m *LinkModelImpl) Find() (links []entity.Link, err error) {
 		return nil, nil
 	}
 	if err != nil {
-		return nil, err
+		return nil, interr.NewDistinctError("Can't find link", interr.LinkModel, interr.LinkModel_FailedFind, nil).Wrap(err)
 	}
 
-	return links, err
+	return links, nil
 }
 
 func (m *LinkModelImpl) Update(updating *entity.Link) (updated *entity.Link, err error) {
 	// Finding the row
 	found, err := m.FindOne(updating.ID)
 	if err != nil {
-		return nil, err
+		return nil, interr.NewDistinctError("Can't find link", interr.LinkModel, interr.LinkModel_UpdatingLinkNotFound, nil).Wrap(err)
 	}
 	if found == nil {
-		return nil, errors.New("LinkModel.Update(): Not found updating row")
+		return nil, interr.NewDistinctError("Can't find link", interr.LinkModel, interr.LinkModel_UpdatingLinkNotFound, nil)
 	}
 
 	// Update the row
 	result := m.db.Model(&entity.Link{}).Update(updating)
 	err = result.Error
 	if err != nil {
-		return nil, err
+		return nil, interr.NewDistinctError("Can't update link", interr.LinkModel, interr.LinkModel_FailedUpdate, nil).Wrap(err)
 	}
 	if result.RowsAffected <= 0 {
+		// There's no value to change
 		return updating, nil
 	}
 
-	return updating, err
+	return updating, nil
 }
 
 func (m *LinkModelImpl) Delete(id uint) (err error) {
@@ -86,10 +87,10 @@ func (m *LinkModelImpl) Delete(id uint) (err error) {
 	result := m.db.Delete(&entity.Link{}, id)
 	err = result.Error
 	if err != nil {
-		return nil
+		return interr.NewDistinctError("Can't delete link", interr.LinkModel, interr.LinkModel_FailedDelete, nil).Wrap(err)
 	}
 	if result.RowsAffected <= 0 {
-		return errors.New("LinkModel.Delete(): Can't delete it")
+		return interr.NewDistinctError("Can't delete link", interr.LinkModel, interr.LinkModel_FailedDelete, nil)
 	}
 
 	return nil
