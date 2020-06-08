@@ -31,3 +31,10 @@ type LinkValidator interface {
 	ValidateID(id uint) (err error)
 	ValidateURL(url string) (err error)
 }
+
+// AuthInterceptor treats authentication user
+type AuthInterceptor interface {
+	// Handle is to handle validation in middleware chain
+	Handle(c *gin.Context)
+	IsNeededLogin(token string) (user *entity.AdminUser, err error)
+}
