@@ -43,7 +43,7 @@ func (m *AdminModelImpl) FindOne(id uint) (user *entity.AdminUser, err error) {
 	result := m.db.First(user, id)
 	err = result.Error
 	if result.RecordNotFound() {
-		return nil, nil
+		return nil, interr.NewDistinctError("There's no user", interr.AdminModel, interr.AdminModel_FindingUserNotFound, nil).Wrap(err)
 	}
 	if err != nil {
 		return nil, interr.NewDistinctError("Can't find user", interr.AdminModel, interr.AdminModel_FailedFind, nil).Wrap(err)
@@ -60,7 +60,7 @@ func (m *AdminModelImpl) FindOneByName(name string) (user *entity.AdminUser, err
 	result := m.db.Where(condition).First(user)
 	err = result.Error
 	if result.RecordNotFound() {
-		return nil, nil
+		return nil, interr.NewDistinctError("There's no user", interr.AdminModel, interr.AdminModel_FindingUserNotFound, nil).Wrap(err)
 	}
 	if err != nil {
 		return nil, interr.NewDistinctError("Can't find user", interr.AdminModel, interr.AdminModel_FailedFind, nil).Wrap(err)
@@ -74,7 +74,7 @@ func (m *AdminModelImpl) Find() (users []entity.AdminUser, err error) {
 	result := m.db.Find(&users)
 	err = result.Error
 	if result.RecordNotFound() {
-		return nil, nil
+		return nil, interr.NewDistinctError("There's no user", interr.AdminModel, interr.AdminModel_FindingUserNotFound, nil).Wrap(err)
 	}
 	if err != nil {
 		return nil, interr.NewDistinctError("Can't find user", interr.AdminModel, interr.AdminModel_FailedFind, nil).Wrap(err)
@@ -85,13 +85,9 @@ func (m *AdminModelImpl) Find() (users []entity.AdminUser, err error) {
 
 func (m *AdminModelImpl) Update(updating *entity.AdminUser) (updated *entity.AdminUser, err error) {
 	// Finding the row
-	found, err := m.FindOne(updating.ID)
+	_, err = m.FindOne(updating.ID)
 	if err != nil {
 		return nil, interr.NewDistinctError("Can't find user", interr.AdminModel, interr.AdminModel_UpdatingUserNotFound, nil).Wrap(err)
-	}
-
-	if found == nil {
-		return nil, interr.NewDistinctError("Can't find user", interr.AdminModel, interr.AdminModel_UpdatingUserNotFound, nil)
 	}
 
 	// If password isn't default value, generate hash of password

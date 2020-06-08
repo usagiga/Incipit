@@ -133,7 +133,7 @@ func TestAdminModelImpl_FindOne(t *testing.T) {
 			ExpectedValue:   &entity.AdminUser{Name: "user_2", ScreenName: "screen_2", Password: "password_2", Model: gorm.Model{ID: 2}},
 		},
 		{
-			IsExpectedError: false,
+			IsExpectedError: true,
 			TestingID:       10,
 			ExpectedValue:   nil,
 		},
@@ -182,7 +182,7 @@ func TestAdminModelImpl_FindOneByName(t *testing.T) {
 			ExpectedValue:   &entity.AdminUser{Name: "user_2", ScreenName: "screen_2", Password: "password_2", Model: gorm.Model{ID: 2}},
 		},
 		{
-			IsExpectedError: false,
+			IsExpectedError: true,
 			TestingName:     "not_existed_user",
 			ExpectedValue:   nil,
 		},
