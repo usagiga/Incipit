@@ -8,4 +8,5 @@ require (
 	github.com/jinzhu/gorm v1.9.12
 	github.com/satori/go.uuid v1.2.0
 	golang.org/x/crypto v0.0.0-20200602180216-279210d13fed
+	golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543
 )
