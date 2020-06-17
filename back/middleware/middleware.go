@@ -16,5 +16,5 @@ type InstallInterceptor interface {
 type AuthInterceptor interface {
 	// Handle is to handle validation in middleware chain
 	Handle(c *gin.Context)
-	IsNeededLogin(token string) (user *entity.AdminUser, err error)
+	Authorize(token string) (user *entity.AdminUser, err error)
 }

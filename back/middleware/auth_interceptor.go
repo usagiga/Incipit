@@ -18,6 +18,6 @@ func (i *AuthInterceptorImpl) Handle(c *gin.Context) {
 	panic("implement me")
 }
 
-func (i *AuthInterceptorImpl) IsNeededLogin(token string) (user *entity.AdminUser, err error) {
+func (i *AuthInterceptorImpl) Authorize(token string) (user *entity.AdminUser, err error) {
 	panic("implement me")
 }
