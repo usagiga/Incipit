@@ -8,16 +8,16 @@ import (
 )
 
 type AdminUserValidatorImpl struct {
-	usableCharRule *regexp.Regexp
+	unusableCharRule *regexp.Regexp
 }
 
 func NewAdminUserValidator() (auv AdminUserValidator, err error) {
-	usableCharRule, err := regexp.Compile("^[a-zA-Z0-9].*$")
+	usableCharRule, err := regexp.Compile("[^a-zA-Z0-9_]")
 	if err != nil {
 		return nil, err
 	}
 
-	return &AdminUserValidatorImpl{usableCharRule: usableCharRule}, nil
+	return &AdminUserValidatorImpl{unusableCharRule: usableCharRule}, nil
 }
 
 func (m *AdminUserValidatorImpl) ValidateAll(user *entity.AdminUser) (err error) {
@@ -55,7 +55,7 @@ func (m *AdminUserValidatorImpl) ValidateName(name string) (err error) {
 		if 32 < len(name) {
 			errChan <- interr.NewDistinctError("Name is too long for admin user", interr.AdminUserValidation, interr.AdminUserValidation_NameIsTooLong, nil)
 		}
-		if m.usableCharRule.Match(nameBytes) {
+		if m.unusableCharRule.Match(nameBytes) {
 			errChan <- interr.NewDistinctError("Name has unavailable char for admin user", interr.AdminUserValidation, interr.AdminUserValidation_NameHasUnavailableChar, nil)
 		}
 
@@ -82,7 +82,7 @@ func (m *AdminUserValidatorImpl) ValidateScreenName(scName string) (err error) {
 		if 32 < len(scName) {
 			errChan <- interr.NewDistinctError("Screen name is too long for admin user", interr.AdminUserValidation, interr.AdminUserValidation_ScreenNameIsTooLong, nil)
 		}
-		if m.usableCharRule.Match(scNameBytes) {
+		if m.unusableCharRule.Match(scNameBytes) {
 			errChan <- interr.NewDistinctError("Screen name has unavailable char for admin user", interr.AdminUserValidation, interr.AdminUserValidation_ScreenNameHasUnavailableChar, nil)
 		}
 
@@ -109,7 +109,7 @@ func (m *AdminUserValidatorImpl) ValidatePassword(password string) (err error) {
 		if 72 < len(password) {
 			errChan <- interr.NewDistinctError("Password is too long for admin user", interr.AdminUserValidation, interr.AdminUserValidation_PasswordIsTooLong, nil)
 		}
-		if m.usableCharRule.Match(passwordBytes) {
+		if m.unusableCharRule.Match(passwordBytes) {
 			errChan <- interr.NewDistinctError("Password has unavailable char for admin user", interr.AdminUserValidation, interr.AdminUserValidation_PasswordHasUnavailableChar, nil)
 		}
 
