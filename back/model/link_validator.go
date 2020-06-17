@@ -34,7 +34,7 @@ func (m *LinkValidatorImpl) ValidateAll(link *entity.Link) (err error) {
 }
 
 func (m *LinkValidatorImpl) ValidateID(id uint) (err error) {
-	panic("implement me")
+	return nil
 }
 
 func (m *LinkValidatorImpl) ValidateURL(url string) (err error) {

@@ -41,7 +41,7 @@ func (m *AdminUserValidatorImpl) ValidateAll(user *entity.AdminUser) (err error)
 }
 
 func (m *AdminUserValidatorImpl) ValidateID(id uint) (err error) {
-	panic("implement me")
+	return nil
 }
 
 func (m *AdminUserValidatorImpl) ValidateName(name string) (err error) {
