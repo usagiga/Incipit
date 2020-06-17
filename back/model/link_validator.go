@@ -11,8 +11,8 @@ type LinkValidatorImpl struct {
 	incipitHost string
 }
 
-func NewLinkValidator() LinkValidator {
-	return &LinkValidatorImpl{}
+func NewLinkValidator(incipitHost string) LinkValidator {
+	return &LinkValidatorImpl{incipitHost: incipitHost}
 }
 
 func (m *LinkValidatorImpl) ValidateAll(link *entity.Link) (err error) {
