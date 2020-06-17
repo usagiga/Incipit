@@ -38,13 +38,20 @@ func (m *LinkValidatorImpl) ValidateID(id uint) (err error) {
 }
 
 func (m *LinkValidatorImpl) ValidateURL(url string) (err error) {
-	errChan := make(chan error, 2)
+	errChan := make(chan error, 3)
 	incipitHost := m.incipitHost
 
 	go func() {
 		parsed, err := urllib.ParseRequestURI(url)
 		if err != nil {
 			errChan <- interr.NewDistinctError("Invalid URL", interr.LinkValidation, interr.LinkValidation_URLIsInvalid, nil).Wrap(err)
+
+			// If failed parse, this validation can't continue
+			close(errChan)
+			return
+		}
+		if parsed.Scheme != "http" && parsed.Scheme != "https" && parsed.Scheme != "ftp" {
+			errChan <- interr.NewDistinctError("Invalid URL scheme", interr.LinkValidation, interr.LinkValidation_URLIsInvalid, nil)
 		}
 		if parsed.Host == incipitHost {
 			errChan <- interr.NewDistinctError("This URL is itself", interr.LinkValidation, interr.LinkValidation_URLIsIncipit, nil)
