@@ -51,3 +51,19 @@ type HashModel interface {
 	Generate(pass string) (hashed string, err error)
 	Equals(hashedPassword, rawPassword string) (err error)
 }
+
+// AdminUserValidator treats validation admin user in request arguments
+type AdminUserValidator interface {
+	ValidateAll(user *entity.AdminUser) (err error)
+	ValidateID(id uint) (err error)
+	ValidateName(name string) (err error)
+	ValidateScreenName(scName string) (err error)
+	ValidatePassword(password string) (err error)
+}
+
+// LinkValidator treats validation link in request arguments
+type LinkValidator interface {
+	ValidateAll(link *entity.Link) (err error)
+	ValidateID(id uint) (err error)
+	ValidateURL(url string) (err error)
+}

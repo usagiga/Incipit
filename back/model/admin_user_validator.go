@@ -1,7 +1,6 @@
-package middleware
+package model
 
 import (
-	"github.com/gin-gonic/gin"
 	"github.com/usagiga/Incipit/back/entity"
 	interr "github.com/usagiga/Incipit/back/entity/errors"
 	"golang.org/x/xerrors"
@@ -19,10 +18,6 @@ func NewAdminUserValidator() (auv AdminUserValidator, err error) {
 	}
 
 	return &AdminUserValidatorImpl{usableCharRule: usableCharRule}, nil
-}
-
-func (m *AdminUserValidatorImpl) Handle(c *gin.Context) {
-	panic("implement me")
 }
 
 func (m *AdminUserValidatorImpl) ValidateAll(user *entity.AdminUser) (err error) {

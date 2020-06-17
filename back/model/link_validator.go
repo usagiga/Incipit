@@ -1,7 +1,6 @@
-package middleware
+package model
 
 import (
-	"github.com/gin-gonic/gin"
 	"github.com/usagiga/Incipit/back/entity"
 	interr "github.com/usagiga/Incipit/back/entity/errors"
 	"golang.org/x/xerrors"
@@ -14,10 +13,6 @@ type LinkValidatorImpl struct {
 
 func NewLinkValidator() LinkValidator {
 	return &LinkValidatorImpl{}
-}
-
-func (m *LinkValidatorImpl) Handle(c *gin.Context) {
-	panic("implement me")
 }
 
 func (m *LinkValidatorImpl) ValidateAll(link *entity.Link) (err error) {
