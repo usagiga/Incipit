@@ -35,3 +35,7 @@ func (m *InstallerModelImpl) CreateNewAdmin(name, screenName, password string) (
 
 	return accToken, refToken, nil
 }
+
+func (m *InstallerModelImpl) IsNeededInstall() (isNeeded bool, err error) {
+	panic("implement me")
+}

@@ -10,6 +10,7 @@ type InstallerModel interface {
 		refToken *entity.RefreshToken,
 		err error,
 	)
+	IsNeededInstall() (isNeeded bool, err error)
 }
 
 // AdminModel treats CRUD of admin user.
