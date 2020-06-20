@@ -26,7 +26,7 @@ func initLinkModel(t *testing.T) (lm LinkModel, finalizer testutils.Finalizer) {
 		}
 	}
 
-	return &LinkModelImpl{db}, dbFin
+	return &LinkModelImpl{db: db, linkValidator: &linkValidatorStub{}}, dbFin
 }
 
 func linkEquals(x *entity.Link, y *entity.Link) bool {
@@ -262,4 +262,18 @@ func TestLinkModelImpl_Delete(t *testing.T) {
 			t.Fatalf("Case %d: Not deleted", caseNum)
 		}
 	}
+}
+
+type linkValidatorStub struct{}
+
+func (v *linkValidatorStub) ValidateAll(link *entity.Link) (err error) {
+	return nil
+}
+
+func (v *linkValidatorStub) ValidateID(id uint) (err error) {
+	return nil
+}
+
+func (v *linkValidatorStub) ValidateURL(url string) (err error) {
+	return nil
 }

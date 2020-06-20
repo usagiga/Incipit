@@ -4,17 +4,25 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/usagiga/Incipit/back/entity"
 	interr "github.com/usagiga/Incipit/back/entity/errors"
+	"golang.org/x/xerrors"
 )
 
 type LinkModelImpl struct {
-	db *gorm.DB
+	db            *gorm.DB
+	linkValidator LinkValidator
 }
 
-func NewLinkModel(db *gorm.DB) LinkModel {
-	return &LinkModelImpl{db: db}
+func NewLinkModel(db *gorm.DB, linkValidator LinkValidator) LinkModel {
+	return &LinkModelImpl{db: db, linkValidator: linkValidator}
 }
 
 func (m *LinkModelImpl) Add(link *entity.Link) (added *entity.Link, err error) {
+	// Validate args
+	err = m.linkValidator.ValidateAll(link)
+	if err != nil {
+		return nil, xerrors.Errorf("It was passed bad arguments: %w", err)
+	}
+
 	// Add the row
 	result := m.db.Create(link)
 	err = result.Error
@@ -30,6 +38,12 @@ func (m *LinkModelImpl) Add(link *entity.Link) (added *entity.Link, err error) {
 
 func (m *LinkModelImpl) FindOne(id uint) (link *entity.Link, err error) {
 	link = &entity.Link{}
+
+	// Validate args
+	err = m.linkValidator.ValidateID(id)
+	if err != nil {
+		return nil, xerrors.Errorf("It was passed bad arguments: %w", err)
+	}
 
 	// Find the row
 	result := m.db.First(link, id)
@@ -59,6 +73,12 @@ func (m *LinkModelImpl) Find() (links []entity.Link, err error) {
 }
 
 func (m *LinkModelImpl) Update(updating *entity.Link) (updated *entity.Link, err error) {
+	// Validate args
+	err = m.linkValidator.ValidateAll(updating)
+	if err != nil {
+		return nil, xerrors.Errorf("It was passed bad arguments: %w", err)
+	}
+
 	// Finding the row
 	_, err = m.FindOne(updating.ID)
 	if err != nil {
@@ -80,6 +100,12 @@ func (m *LinkModelImpl) Update(updating *entity.Link) (updated *entity.Link, err
 }
 
 func (m *LinkModelImpl) Delete(id uint) (err error) {
+	// Validate args
+	err = m.linkValidator.ValidateID(id)
+	if err != nil {
+		return xerrors.Errorf("It was passed bad arguments: %w", err)
+	}
+
 	// Delete the row
 	result := m.db.Delete(&entity.Link{}, id)
 	err = result.Error
