@@ -10,9 +10,8 @@ import (
 type ErrorResponse struct {
 	BaseResponse
 
-	PrimaryErrorCode   int         `json:"p_code"`
-	SecondaryErrorCode int         `json:"s_code"`
-	Details            interface{} `json:"details"`
+	PrimaryErrorCode   int `json:"p_code"`
+	SecondaryErrorCode int `json:"s_code"`
 }
 
 // GetHTTPStatusCode returns HTTP status code determine from its internal error code
@@ -28,18 +27,16 @@ func NewErrorResponse(err error) (resp Response) {
 	if !ok {
 		// Unknown error
 		return &ErrorResponse{
-			BaseResponse:       BaseResponse{Type: "error"},
+			BaseResponse:       BaseResponse{Type: "error", Details: nil},
 			PrimaryErrorCode:   0,
 			SecondaryErrorCode: 0,
-			Details:            nil,
 		}
 	}
 
 	// Known error
 	return &ErrorResponse{
-		BaseResponse:       BaseResponse{Type: "error"},
+		BaseResponse:       BaseResponse{Type: "error", Details: dError.Detail},
 		PrimaryErrorCode:   int(dError.PrimaryCode),
 		SecondaryErrorCode: int(dError.SecondaryCode),
-		Details:            dError.Detail,
 	}
 }
