@@ -27,7 +27,13 @@ func initAdminModel(t *testing.T) (am AdminModel, finalizer testutils.Finalizer)
 		}
 	}
 
-	return &AdminModelImpl{db: db, hashModel: &hashModelStub{}}, dbFin
+	am = &AdminModelImpl{
+		db:                 db,
+		hashModel:          &hashModelStub{},
+		adminUserValidator: &adminUserValidatorStub{},
+	}
+
+	return am, dbFin
 }
 
 func adminUserEquals(x *entity.AdminUser, y *entity.AdminUser) bool {
@@ -312,4 +318,26 @@ func TestAdminModelImpl_Delete(t *testing.T) {
 			t.Fatalf("Case %d: Not deleted", caseNum)
 		}
 	}
+}
+
+type adminUserValidatorStub struct{}
+
+func (v *adminUserValidatorStub) ValidateAll(user *entity.AdminUser) (err error) {
+	return nil
+}
+
+func (v *adminUserValidatorStub) ValidateID(id uint) (err error) {
+	return nil
+}
+
+func (v *adminUserValidatorStub) ValidateName(name string) (err error) {
+	return nil
+}
+
+func (v *adminUserValidatorStub) ValidateScreenName(scName string) (err error) {
+	return nil
+}
+
+func (v *adminUserValidatorStub) ValidatePassword(password string) (err error) {
+	return nil
 }

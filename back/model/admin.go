@@ -8,18 +8,30 @@ import (
 )
 
 type AdminModelImpl struct {
-	db        *gorm.DB
-	hashModel HashModel
+	db                 *gorm.DB
+	hashModel          HashModel
+	adminUserValidator AdminUserValidator
 }
 
-func NewAdminModel(db *gorm.DB, hashModel HashModel) AdminModel {
+func NewAdminModel(
+	db *gorm.DB,
+	hashModel HashModel,
+	adminUserValidator AdminUserValidator,
+) AdminModel {
 	return &AdminModelImpl{
-		db:        db,
-		hashModel: hashModel,
+		db:                 db,
+		hashModel:          hashModel,
+		adminUserValidator: adminUserValidator,
 	}
 }
 
 func (m *AdminModelImpl) Add(user *entity.AdminUser) (added *entity.AdminUser, err error) {
+	// Validate args
+	err = m.adminUserValidator.ValidateAll(user)
+	if err != nil {
+		return nil, xerrors.Errorf("It was passed bad arguments: %w", err)
+	}
+
 	// Generate hash of password
 	user.Password, err = m.hashModel.Generate(user.Password)
 	if err != nil {
@@ -39,6 +51,12 @@ func (m *AdminModelImpl) Add(user *entity.AdminUser) (added *entity.AdminUser, e
 func (m *AdminModelImpl) FindOne(id uint) (user *entity.AdminUser, err error) {
 	user = &entity.AdminUser{}
 
+	// Validate args
+	err = m.adminUserValidator.ValidateID(id)
+	if err != nil {
+		return nil, xerrors.Errorf("It was passed bad arguments: %w", err)
+	}
+
 	// Find the row
 	result := m.db.First(user, id)
 	err = result.Error
@@ -55,6 +73,12 @@ func (m *AdminModelImpl) FindOne(id uint) (user *entity.AdminUser, err error) {
 func (m *AdminModelImpl) FindOneByName(name string) (user *entity.AdminUser, err error) {
 	user = &entity.AdminUser{}
 	condition := &entity.AdminUser{Name: name}
+
+	// Validate args
+	err = m.adminUserValidator.ValidateName(name)
+	if err != nil {
+		return nil, xerrors.Errorf("It was passed bad arguments: %w", err)
+	}
 
 	// Find the row with the condition
 	result := m.db.Where(condition).First(user)
@@ -84,6 +108,12 @@ func (m *AdminModelImpl) Find() (users []entity.AdminUser, err error) {
 }
 
 func (m *AdminModelImpl) Update(updating *entity.AdminUser) (updated *entity.AdminUser, err error) {
+	// Validate args
+	err = m.adminUserValidator.ValidateAll(updating)
+	if err != nil {
+		return nil, xerrors.Errorf("It was passed bad arguments: %w", err)
+	}
+
 	// Finding the row
 	_, err = m.FindOne(updating.ID)
 	if err != nil {
@@ -113,6 +143,12 @@ func (m *AdminModelImpl) Update(updating *entity.AdminUser) (updated *entity.Adm
 }
 
 func (m *AdminModelImpl) Delete(id uint) (err error) {
+	// Validate args
+	err = m.adminUserValidator.ValidateID(id)
+	if err != nil {
+		return xerrors.Errorf("It was passed bad arguments: %w", err)
+	}
+
 	// Delete the row
 	result := m.db.Unscoped().Delete(&entity.AdminUser{}, id)
 	err = result.Error
