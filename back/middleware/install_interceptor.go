@@ -13,7 +13,3 @@ func NewInstallInterceptor() InstallInterceptor {
 func (m *InstallInterceptorImpl) Handle(c *gin.Context) {
 	panic("implement me")
 }
-
-func (m *InstallInterceptorImpl) IsNeededInstall() (isNeeded bool, err error) {
-	panic("implement me")
-}
