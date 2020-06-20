@@ -1,6 +1,8 @@
 package handler
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+)
 
 type LinkHandlerImpl struct {
 
@@ -11,6 +13,10 @@ func NewLinkHandler() LinkHandler {
 }
 
 func (h *LinkHandlerImpl) HandleGetLink(c *gin.Context) {
+	panic("implement me")
+}
+
+func (h *LinkHandlerImpl) HandleGetLinkByShortURL(c *gin.Context) {
 	panic("implement me")
 }
 

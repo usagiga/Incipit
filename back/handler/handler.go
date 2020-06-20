@@ -23,6 +23,8 @@ type AdminAuthHandler interface {
 type LinkHandler interface {
 	// GET /api/link
 	HandleGetLink(c *gin.Context)
+	// GET /api/link/shortened
+	HandleGetLinkByShortURL(c *gin.Context)
 	// POST /api/link
 	HandleCreateLink(c *gin.Context)
 	// PATCH /api/link
