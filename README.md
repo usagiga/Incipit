@@ -25,13 +25,6 @@ URL shortener service for private use.
 ### Frontend
 
 - Nuxt.js
-    - All of Nuxt.js's packages
-        - Vue.js
-        - Vue Router
-        - Vuex
-        - webpack
-        - babel
-        - SCSS
     - TypeScript
     - Vuetify.js
 - ESLint
@@ -42,6 +35,7 @@ URL shortener service for private use.
 - h2o
 - Docker
     - Compose
+- GitHub Actions
 
 
 ## License
