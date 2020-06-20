@@ -51,6 +51,9 @@ func TestInstallInterceptorImpl_Handle(t *testing.T) {
 		}
 		actualRespType := actualResp.Type
 
+		if expectedCode != http.StatusOK && !ctx.IsAborted() {
+			t.Errorf("Case %d: Not aborted response", caseNum)
+		}
 		if actualCode != expectedCode {
 			t.Errorf("Case %d: Not valid HTTP status code of its response: Expected: %d, Actual: %d", caseNum, expectedCode, actualCode)
 		}
