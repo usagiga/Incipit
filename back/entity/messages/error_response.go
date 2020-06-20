@@ -16,7 +16,21 @@ type ErrorResponse struct {
 
 // GetHTTPStatusCode returns HTTP status code determine from its internal error code
 func (resp *ErrorResponse) GetHTTPStatusCode() int {
-	// Temporary
+	if interr.PrimaryErrorCode(resp.PrimaryErrorCode) == interr.AdminAuthModel &&
+		interr.SecondaryErrorCode(resp.SecondaryErrorCode) == interr.AdminAuthModel_ExpiredToken {
+		return http.StatusForbidden
+	}
+
+	if interr.PrimaryErrorCode(resp.PrimaryErrorCode) == interr.AdminAuthModel &&
+		interr.SecondaryErrorCode(resp.SecondaryErrorCode) == interr.AdminAuthModel_UnmatchPassword {
+		return http.StatusForbidden
+	}
+
+	if interr.PrimaryErrorCode(resp.PrimaryErrorCode) == interr.AdminAuthModel &&
+		interr.SecondaryErrorCode(resp.SecondaryErrorCode) == interr.AdminAuthModel_FailedToFindUser {
+		return http.StatusForbidden
+	}
+
 	return http.StatusInternalServerError
 }
 
