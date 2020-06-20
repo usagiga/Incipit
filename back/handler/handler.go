@@ -13,6 +13,13 @@ type AdminUserHandler interface {
 	HandleDeleteAdmin(c *gin.Context)
 }
 
+type AdminAuthHandler interface {
+	// POST /api/login
+	HandleLogin(c *gin.Context)
+	// POST /api/login/refresh
+	HandleRefreshToken(c *gin.Context)
+}
+
 type LinkHandler interface {
 	// GET /api/link
 	HandleGetLink(c *gin.Context)
