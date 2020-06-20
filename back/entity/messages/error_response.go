@@ -22,7 +22,7 @@ func (resp *ErrorResponse) GetHTTPStatusCode() int {
 }
 
 // NewErrorResponse returns ErrorResponse which is made by error
-func NewErrorResponse(err error) (resp *ErrorResponse) {
+func NewErrorResponse(err error) (resp Response) {
 	var dError *interr.DistinctError
 	ok := xerrors.As(err, &dError)
 	if !ok {
