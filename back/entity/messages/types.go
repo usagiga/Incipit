@@ -5,3 +5,8 @@ type AdminUser struct {
 	Name       string `json:"name"`
 	ScreenName string `json:"screen_name"`
 }
+
+type Link struct {
+	ID  uint   `json:"id"`
+	URL string `json:"url"`
+}
