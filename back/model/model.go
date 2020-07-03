@@ -42,6 +42,7 @@ type AdminAuthModel interface {
 type LinkModel interface {
 	Add(link *entity.Link) (added *entity.Link, err error)
 	FindOne(id uint) (link *entity.Link, err error)
+	FindOneByShortID(shortId string) (link *entity.Link, err error)
 	Find() (links []entity.Link, err error)
 	Update(updating *entity.Link) (updated *entity.Link, err error)
 	Delete(id uint) (err error)

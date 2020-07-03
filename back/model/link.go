@@ -58,6 +58,24 @@ func (m *LinkModelImpl) FindOne(id uint) (link *entity.Link, err error) {
 	return link, nil
 }
 
+func (m *LinkModelImpl) FindOneByShortID(shortId string) (link *entity.Link, err error) {
+	// Validate args
+	// TODO : Implement it
+
+	// FindOne
+	id, err := entity.ToActualID(shortId)
+	if err != nil {
+		return nil, xerrors.Errorf("Can't parse short id: %w", err)
+	}
+
+	found, err := m.FindOne(id)
+	if err != nil {
+		return nil, xerrors.Errorf("Can't find link by short id: %w", err)
+	}
+
+	return found, nil
+}
+
 func (m *LinkModelImpl) Find() (links []entity.Link, err error) {
 	// Find all rows
 	result := m.db.Find(&links)
