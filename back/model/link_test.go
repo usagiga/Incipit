@@ -164,6 +164,60 @@ func TestLinkModelImpl_FindOne(t *testing.T) {
 	}
 }
 
+func TestLinkModelImpl_FindOneByShortID(t *testing.T) {
+	// Initialize model
+	lm, lmFin := initLinkModel(t)
+	defer lmFin()
+
+	// Declare test cases
+	testCases := []struct {
+		IsExpectedError bool
+		TestingShortID  string
+		ExpectedValue   *entity.Link
+	}{
+		{
+			IsExpectedError: false,
+			TestingShortID:  "2", // 2
+			ExpectedValue:   &entity.Link{URL: "https://example.com/2/", Model: gorm.Model{ID: 2}},
+		},
+		{
+			IsExpectedError: true,
+			TestingShortID:  "ABCDEFG", // Big integer
+			ExpectedValue:   nil,
+		},
+		{
+			IsExpectedError: true,
+			TestingShortID:  "+", // Unexpected token
+			ExpectedValue:   nil,
+		},
+	}
+
+	// Do test
+	for i, v := range testCases {
+		caseNum := i + 1
+		isExpectedError := v.IsExpectedError
+		findingShortID := v.TestingShortID
+		expectedVal := v.ExpectedValue
+
+		actualVal, err := lm.FindOneByShortID(findingShortID)
+
+		// When raising NOT expected error
+		if err != nil && !isExpectedError {
+			t.Fatalf("Case %d: This case is not expected to raise error, but error raised; %v", caseNum, err)
+		}
+
+		// When NOT raising expected error
+		if err == nil && isExpectedError {
+			t.Fatalf("Case %d: This case is expected to raise error, but error didn't raised", caseNum)
+		}
+
+		// When actual value isn't equal expected value
+		if !linkEquals(expectedVal, actualVal) {
+			t.Fatalf("Case %d: Actual value isn't equal expected value.\nExpected:\t%v,\nActual:\t%v", caseNum, expectedVal, actualVal)
+		}
+	}
+}
+
 func TestLinkModelImpl_Update(t *testing.T) {
 	// Initialize model
 	lm, lmFin := initLinkModel(t)
@@ -181,7 +235,7 @@ func TestLinkModelImpl_Update(t *testing.T) {
 			ExpectingValue:  &entity.Link{URL: "https://example.com/updated/", Model: gorm.Model{ID: 2}},
 		},
 		{
-			IsExpectedError: false,
+			IsExpectedError: true,
 			TestingValue:    &entity.Link{URL: "https://example.com/1/", Model: gorm.Model{ID: 1}},
 			ExpectingValue:  &entity.Link{URL: "https://example.com/1/", Model: gorm.Model{ID: 1}},
 		},
