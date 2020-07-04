@@ -235,7 +235,7 @@ func TestLinkModelImpl_Update(t *testing.T) {
 			ExpectingValue:  &entity.Link{URL: "https://example.com/updated/", Model: gorm.Model{ID: 2}},
 		},
 		{
-			IsExpectedError: true,
+			IsExpectedError: false,
 			TestingValue:    &entity.Link{URL: "https://example.com/1/", Model: gorm.Model{ID: 1}},
 			ExpectingValue:  &entity.Link{URL: "https://example.com/1/", Model: gorm.Model{ID: 1}},
 		},
