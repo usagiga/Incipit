@@ -182,7 +182,7 @@ func TestLinkModelImpl_FindOneByShortID(t *testing.T) {
 		},
 		{
 			IsExpectedError: true,
-			TestingShortID:  "ABCDEFG", // Big integer
+			TestingShortID:  "ABC", // Big integer
 			ExpectedValue:   nil,
 		},
 		{
