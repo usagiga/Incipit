@@ -5,6 +5,8 @@ services:
       context: .
       dockerfile: ./docker/back/Dockerfile-Test
     environment:
+      INCIPIT_HOST: example.com
+      INCIPIT_PORT: 8080
       INCIPIT_MYSQL_HOST: db
       INCIPIT_MYSQL_PORT: 3306
       INCIPIT_MYSQL_USER: incipit

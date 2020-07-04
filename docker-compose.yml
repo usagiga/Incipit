@@ -10,13 +10,15 @@ services:
       - ./docker/h2o/h2o.conf:/etc/h2o/h2o.conf
   front:
     build:
-        context: .
-        dockerfile: ./docker/front/Dockerfile
+      context: .
+      dockerfile: ./docker/front/Dockerfile
   back:
     build:
       context: .
       dockerfile: ./docker/back/Dockerfile
     environment:
+      INCIPIT_HOST: example.com
+      INCIPIT_PORT: 8080
       INCIPIT_MYSQL_HOST: db
       INCIPIT_MYSQL_PORT: 3306
       INCIPIT_MYSQL_USER: incipit

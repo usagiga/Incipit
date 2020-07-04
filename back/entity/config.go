@@ -3,6 +3,10 @@ package entity
 import "fmt"
 
 type Config struct {
+	// General
+	IncipitHost string `env:"INCIPIT_HOST"`
+	IncipitPort int    `env:"INCIPIT_PORT"`
+
 	// MySQL
 	MySQLHost     string `env:"INCIPIT_MYSQL_HOST"`
 	MySQLPort     int    `env:"INCIPIT_MYSQL_PORT"`
