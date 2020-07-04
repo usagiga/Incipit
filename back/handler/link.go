@@ -2,32 +2,155 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/gorm"
+	"github.com/usagiga/Incipit/back/entity"
+	"github.com/usagiga/Incipit/back/entity/messages"
+	"github.com/usagiga/Incipit/back/model"
 )
 
 type LinkHandlerImpl struct {
-
+	linkModel model.LinkModel
 }
 
-func NewLinkHandler() LinkHandler {
-	return &LinkHandlerImpl{}
+func NewLinkHandler(linkModel model.LinkModel) LinkHandler {
+	return &LinkHandlerImpl{
+		linkModel: linkModel,
+	}
 }
 
 func (h *LinkHandlerImpl) HandleGetLink(c *gin.Context) {
-	panic("implement me")
+	req := &messages.GetLinkRequest{}
+	err := c.BindJSON(req)
+	if err != nil {
+		res := messages.NewErrorResponse(err)
+		sCode := res.GetHTTPStatusCode()
+
+		c.AbortWithStatusJSON(sCode, res)
+		return
+	}
+
+	found, err := h.linkModel.FindOne(req.ID)
+	if err != nil {
+		res := messages.NewErrorResponse(err)
+		sCode := res.GetHTTPStatusCode()
+
+		c.AbortWithStatusJSON(sCode, res)
+		return
+	}
+
+	res := messages.NewGetLinkResponse(found)
+	sCode := res.GetHTTPStatusCode()
+
+	c.JSON(sCode, res)
 }
 
 func (h *LinkHandlerImpl) HandleGetLinkByShortURL(c *gin.Context) {
-	panic("implement me")
+	req := &messages.GetLinkByShortIDRequest{}
+	err := c.BindJSON(req)
+	if err != nil {
+		res := messages.NewErrorResponse(err)
+		sCode := res.GetHTTPStatusCode()
+
+		c.AbortWithStatusJSON(sCode, res)
+		return
+	}
+
+	found, err := h.linkModel.FindOneByShortID(req.ShortID)
+	if err != nil {
+		res := messages.NewErrorResponse(err)
+		sCode := res.GetHTTPStatusCode()
+
+		c.AbortWithStatusJSON(sCode, res)
+		return
+	}
+
+	res := messages.NewGetLinkByShortIDResponse(found)
+	sCode := res.GetHTTPStatusCode()
+
+	c.JSON(sCode, res)
 }
 
 func (h *LinkHandlerImpl) HandleCreateLink(c *gin.Context) {
-	panic("implement me")
+	req := &messages.CreateLinkRequest{}
+	err := c.BindJSON(req)
+	if err != nil {
+		res := messages.NewErrorResponse(err)
+		sCode := res.GetHTTPStatusCode()
+
+		c.AbortWithStatusJSON(sCode, res)
+		return
+	}
+
+	creating := &entity.Link{
+		URL: req.URL,
+	}
+	created, err := h.linkModel.Add(creating)
+	if err != nil {
+		res := messages.NewErrorResponse(err)
+		sCode := res.GetHTTPStatusCode()
+
+		c.AbortWithStatusJSON(sCode, res)
+		return
+	}
+
+	res := messages.NewCreateLinkResponse(created)
+	sCode := res.GetHTTPStatusCode()
+
+	c.JSON(sCode, res)
 }
 
 func (h *LinkHandlerImpl) HandleUpdateLink(c *gin.Context) {
-	panic("implement me")
+	req := &messages.UpdateLinkRequest{}
+	err := c.BindJSON(req)
+	if err != nil {
+		res := messages.NewErrorResponse(err)
+		sCode := res.GetHTTPStatusCode()
+
+		c.AbortWithStatusJSON(sCode, res)
+		return
+	}
+
+	updating := &entity.Link{
+		Model: gorm.Model{ID: req.ID},
+		URL: req.URL,
+	}
+	updated, err := h.linkModel.Update(updating)
+	if err != nil {
+		res := messages.NewErrorResponse(err)
+		sCode := res.GetHTTPStatusCode()
+
+		c.AbortWithStatusJSON(sCode, res)
+		return
+	}
+
+	res := messages.NewUpdateLinkResponse(updated)
+	sCode := res.GetHTTPStatusCode()
+
+	c.JSON(sCode, res)
 }
 
 func (h *LinkHandlerImpl) HandleDeleteLink(c *gin.Context) {
-	panic("implement me")
+	req := &messages.DeleteLinkRequest{}
+	err := c.BindJSON(req)
+	if err != nil {
+		res := messages.NewErrorResponse(err)
+		sCode := res.GetHTTPStatusCode()
+
+		c.AbortWithStatusJSON(sCode, res)
+		return
+	}
+
+	err = h.linkModel.Delete(req.ID)
+	if err != nil {
+		res := messages.NewErrorResponse(err)
+		sCode := res.GetHTTPStatusCode()
+
+		c.AbortWithStatusJSON(sCode, res)
+		return
+	}
+
+	res := messages.NewDeleteLinkResponse()
+	sCode := res.GetHTTPStatusCode()
+
+	c.JSON(sCode, res)
 }
