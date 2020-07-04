@@ -10,3 +10,11 @@ type Link struct {
 	ID  uint   `json:"id"`
 	URL string `json:"url"`
 }
+
+type AccessToken struct {
+	Token string
+}
+
+type RefreshToken struct {
+	Token string
+}
