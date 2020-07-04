@@ -14,6 +14,10 @@ import (
 func TestAuthInterceptorImpl_Handle(t *testing.T) {
 	ai := &AuthInterceptorImpl{adminAuthModel: &adminAuthModelStub{}}
 
+	_, router := gin.CreateTestContext(nil)
+	router.GET("/test", ai.Handle)
+
+
 	// Declare test cases
 	testCases := []struct {
 		ExpectedStatusCode   int
@@ -35,36 +39,38 @@ func TestAuthInterceptorImpl_Handle(t *testing.T) {
 	// Do test
 	for i, v := range testCases {
 		caseNum := i + 1
-		expectedCode := v.ExpectedStatusCode
-		expectedRespType := v.ExpectedResponseType
 		w := httptest.NewRecorder()
-		_, router := gin.CreateTestContext(w)
 
+		// Exec
 		req := httptest.NewRequest("GET", "/test", nil)
 		req.Header.Set("Authorization", "Bearer "+v.TestingToken)
 
-		// Exec
-		router.GET("/test", ai.Handle)
 		router.ServeHTTP(w, req)
 
-		// Validate operation
+		// Check status code
+		expectedCode := v.ExpectedStatusCode
 		actualCode := w.Code
+		if actualCode != expectedCode {
+			t.Errorf("Case %d: Not valid HTTP status code of its response: Expected: %d, Actual: %d", caseNum, expectedCode, actualCode)
+		}
+
+		// Check response type
+		expectedRespType := v.ExpectedResponseType
+
 		actualRespBodyBytes := w.Body.Bytes()
 		if len(actualRespBodyBytes) == 0 && expectedRespType == "" {
 			continue
 		}
 
-		actualResp := &messages.BaseResponse{}
-		err := json.Unmarshal(actualRespBodyBytes, actualResp)
+		res := &messages.BaseResponse{}
+		err := json.Unmarshal(actualRespBodyBytes, res)
 		if err != nil {
 			t.Errorf("Case %d: Can't unmarshal response JSON", caseNum)
 			continue
 		}
-		actualRespType := actualResp.Type
 
-		if actualCode != expectedCode {
-			t.Errorf("Case %d: Not valid HTTP status code of its response: Expected: %d, Actual: %d", caseNum, expectedCode, actualCode)
-		}
+		actualRespType := res.Type
+
 		if actualRespType != expectedRespType {
 			t.Errorf("Case %d: Not valid response body:\nExpected: %s\nActual: %s", caseNum, expectedRespType, actualRespType)
 		}

@@ -27,8 +27,6 @@ func TestInstallInterceptorImpl_Handle(t *testing.T) {
 	// Do test
 	for i, v := range testCases {
 		caseNum := i + 1
-		expectedCode := v.ExpectedStatusCode
-		expectedRespType := v.ExpectedResponseType
 		w := httptest.NewRecorder()
 		ctx, _ := gin.CreateTestContext(w)
 		ii := &InstallInterceptorImpl{installerModel: v.TestingInstallerModel}
@@ -36,27 +34,33 @@ func TestInstallInterceptorImpl_Handle(t *testing.T) {
 		// Exec
 		ii.Handle(ctx)
 
-		// Validate operation
+		// Check status code
+		expectedCode := v.ExpectedStatusCode
 		actualCode := w.Code
-		actualRespBodyBytes := []byte(w.Body.String())
-		if len(actualRespBodyBytes) == 0 && expectedRespType == "" {
-			continue
-		}
-
-		actualResp := &messages.BaseResponse{}
-		err := json.Unmarshal(actualRespBodyBytes, actualResp)
-		if err != nil {
-			t.Errorf("Case %d: Can't unmarshal response JSON", caseNum)
-			continue
-		}
-		actualRespType := actualResp.Type
-
 		if expectedCode != http.StatusOK && !ctx.IsAborted() {
 			t.Errorf("Case %d: Not aborted response", caseNum)
 		}
 		if actualCode != expectedCode {
 			t.Errorf("Case %d: Not valid HTTP status code of its response: Expected: %d, Actual: %d", caseNum, expectedCode, actualCode)
 		}
+
+		// Check response type
+		expectedRespType := v.ExpectedResponseType
+
+		actualRespBodyBytes := []byte(w.Body.String())
+		if len(actualRespBodyBytes) == 0 && expectedRespType == "" {
+			continue
+		}
+
+		res := &messages.BaseResponse{}
+		err := json.Unmarshal(actualRespBodyBytes, res)
+		if err != nil {
+			t.Errorf("Case %d: Can't unmarshal response JSON", caseNum)
+			continue
+		}
+
+		actualRespType := res.Type
+
 		if actualRespType != expectedRespType {
 			t.Errorf("Case %d: Not valid response body:\nExpected: %s\nActual: %s", caseNum, expectedRespType, actualRespType)
 		}
