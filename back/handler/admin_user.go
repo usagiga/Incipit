@@ -2,6 +2,7 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/gorm"
 	"github.com/usagiga/Incipit/back/entity"
 	"github.com/usagiga/Incipit/back/entity/messages"
 	"github.com/usagiga/Incipit/back/model"
@@ -84,6 +85,7 @@ func (h *AdminUserHandlerImpl) HandleUpdateAdmin(c *gin.Context) {
 	}
 
 	updating := &entity.AdminUser{
+		Model:      gorm.Model{ID: req.ID},
 		Name:       req.Name,
 		ScreenName: req.ScreenName,
 		Password:   req.Password,
