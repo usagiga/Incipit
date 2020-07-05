@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"github.com/usagiga/Incipit/back/entity"
+	interr "github.com/usagiga/Incipit/back/entity/errors"
 	"github.com/usagiga/Incipit/back/entity/messages"
 	"github.com/usagiga/Incipit/back/model"
 )
@@ -18,8 +19,10 @@ func NewAdminUserHandler(adminModel model.AdminModel) AdminUserHandler {
 
 func (h *AdminUserHandlerImpl) HandleGetAdmin(c *gin.Context) {
 	req := &messages.GetAdminRequest{}
-	err := c.BindJSON(req)
+	err := c.ShouldBindJSON(req)
 	if err != nil {
+		err = interr.NewDistinctError("Can't bind JSON", interr.AdminUserHandler, interr.AdminUserHandler_FailedBindJson, nil)
+
 		res := messages.NewErrorResponse(err)
 		sCode := res.GetHTTPStatusCode()
 
@@ -44,8 +47,10 @@ func (h *AdminUserHandlerImpl) HandleGetAdmin(c *gin.Context) {
 
 func (h *AdminUserHandlerImpl) HandleCreateAdmin(c *gin.Context) {
 	req := &messages.CreateAdminRequest{}
-	err := c.BindJSON(req)
+	err := c.ShouldBindJSON(req)
 	if err != nil {
+		err = interr.NewDistinctError("Can't bind JSON", interr.AdminUserHandler, interr.AdminUserHandler_FailedBindJson, nil)
+
 		res := messages.NewErrorResponse(err)
 		sCode := res.GetHTTPStatusCode()
 
@@ -75,8 +80,10 @@ func (h *AdminUserHandlerImpl) HandleCreateAdmin(c *gin.Context) {
 
 func (h *AdminUserHandlerImpl) HandleUpdateAdmin(c *gin.Context) {
 	req := &messages.UpdateAdminRequest{}
-	err := c.BindJSON(req)
+	err := c.ShouldBindJSON(req)
 	if err != nil {
+		err = interr.NewDistinctError("Can't bind JSON", interr.AdminUserHandler, interr.AdminUserHandler_FailedBindJson, nil)
+
 		res := messages.NewErrorResponse(err)
 		sCode := res.GetHTTPStatusCode()
 
@@ -107,8 +114,10 @@ func (h *AdminUserHandlerImpl) HandleUpdateAdmin(c *gin.Context) {
 
 func (h *AdminUserHandlerImpl) HandleDeleteAdmin(c *gin.Context) {
 	req := &messages.DeleteAdminRequest{}
-	err := c.BindJSON(req)
+	err := c.ShouldBindJSON(req)
 	if err != nil {
+		err = interr.NewDistinctError("Can't bind JSON", interr.AdminUserHandler, interr.AdminUserHandler_FailedBindJson, nil)
+
 		res := messages.NewErrorResponse(err)
 		sCode := res.GetHTTPStatusCode()
 

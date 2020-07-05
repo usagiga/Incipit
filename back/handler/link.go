@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"github.com/usagiga/Incipit/back/entity"
+	interr "github.com/usagiga/Incipit/back/entity/errors"
 	"github.com/usagiga/Incipit/back/entity/messages"
 	"github.com/usagiga/Incipit/back/model"
 )
@@ -20,8 +21,10 @@ func NewLinkHandler(linkModel model.LinkModel) LinkHandler {
 
 func (h *LinkHandlerImpl) HandleGetLink(c *gin.Context) {
 	req := &messages.GetLinkRequest{}
-	err := c.BindJSON(req)
+	err := c.ShouldBindJSON(req)
 	if err != nil {
+		err = interr.NewDistinctError("Can't bind JSON", interr.LinkHandler, interr.LinkHandler_FailedBindJson, nil)
+
 		res := messages.NewErrorResponse(err)
 		sCode := res.GetHTTPStatusCode()
 
@@ -46,8 +49,10 @@ func (h *LinkHandlerImpl) HandleGetLink(c *gin.Context) {
 
 func (h *LinkHandlerImpl) HandleGetLinkByShortURL(c *gin.Context) {
 	req := &messages.GetLinkByShortIDRequest{}
-	err := c.BindJSON(req)
+	err := c.ShouldBindJSON(req)
 	if err != nil {
+		err = interr.NewDistinctError("Can't bind JSON", interr.LinkHandler, interr.LinkHandler_FailedBindJson, nil)
+
 		res := messages.NewErrorResponse(err)
 		sCode := res.GetHTTPStatusCode()
 
@@ -72,8 +77,10 @@ func (h *LinkHandlerImpl) HandleGetLinkByShortURL(c *gin.Context) {
 
 func (h *LinkHandlerImpl) HandleCreateLink(c *gin.Context) {
 	req := &messages.CreateLinkRequest{}
-	err := c.BindJSON(req)
+	err := c.ShouldBindJSON(req)
 	if err != nil {
+		err = interr.NewDistinctError("Can't bind JSON", interr.LinkHandler, interr.LinkHandler_FailedBindJson, nil)
+
 		res := messages.NewErrorResponse(err)
 		sCode := res.GetHTTPStatusCode()
 
@@ -101,8 +108,10 @@ func (h *LinkHandlerImpl) HandleCreateLink(c *gin.Context) {
 
 func (h *LinkHandlerImpl) HandleUpdateLink(c *gin.Context) {
 	req := &messages.UpdateLinkRequest{}
-	err := c.BindJSON(req)
+	err := c.ShouldBindJSON(req)
 	if err != nil {
+		err = interr.NewDistinctError("Can't bind JSON", interr.LinkHandler, interr.LinkHandler_FailedBindJson, nil)
+
 		res := messages.NewErrorResponse(err)
 		sCode := res.GetHTTPStatusCode()
 
@@ -131,8 +140,10 @@ func (h *LinkHandlerImpl) HandleUpdateLink(c *gin.Context) {
 
 func (h *LinkHandlerImpl) HandleDeleteLink(c *gin.Context) {
 	req := &messages.DeleteLinkRequest{}
-	err := c.BindJSON(req)
+	err := c.ShouldBindJSON(req)
 	if err != nil {
+		err = interr.NewDistinctError("Can't bind JSON", interr.LinkHandler, interr.LinkHandler_FailedBindJson, nil)
+
 		res := messages.NewErrorResponse(err)
 		sCode := res.GetHTTPStatusCode()
 
