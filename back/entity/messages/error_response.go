@@ -16,6 +16,7 @@ type ErrorResponse struct {
 
 // GetHTTPStatusCode returns HTTP status code determine from its internal error code
 func (resp *ErrorResponse) GetHTTPStatusCode() int {
+	// Authorization
 	if interr.PrimaryErrorCode(resp.PrimaryErrorCode) == interr.AdminAuthModel &&
 		interr.SecondaryErrorCode(resp.SecondaryErrorCode) == interr.AdminAuthModel_ExpiredToken {
 		return http.StatusForbidden
@@ -30,6 +31,32 @@ func (resp *ErrorResponse) GetHTTPStatusCode() int {
 		interr.SecondaryErrorCode(resp.SecondaryErrorCode) == interr.AdminAuthModel_FailedToFindUser {
 		return http.StatusForbidden
 	}
+
+	// JSON Binding
+	if interr.PrimaryErrorCode(resp.PrimaryErrorCode) == interr.AdminUserHandler &&
+		interr.SecondaryErrorCode(resp.SecondaryErrorCode) == interr.AdminUserHandler_FailedBindJson {
+		return http.StatusBadRequest
+	}
+
+	if interr.PrimaryErrorCode(resp.PrimaryErrorCode) == interr.AdminAuthHandler &&
+		interr.SecondaryErrorCode(resp.SecondaryErrorCode) == interr.AdminAuthHandler_FailedBindJson {
+		return http.StatusBadRequest
+	}
+
+	if interr.PrimaryErrorCode(resp.PrimaryErrorCode) == interr.LinkHandler &&
+		interr.SecondaryErrorCode(resp.SecondaryErrorCode) == interr.LinkHandler_FailedBindJson {
+		return http.StatusBadRequest
+	}
+
+	// Validation
+	if interr.PrimaryErrorCode(resp.PrimaryErrorCode) == interr.AdminUserValidation  {
+		return http.StatusBadRequest
+	}
+
+	if interr.PrimaryErrorCode(resp.PrimaryErrorCode) == interr.LinkValidation  {
+		return http.StatusBadRequest
+	}
+
 
 	return http.StatusInternalServerError
 }

@@ -19,6 +19,11 @@ const (
 	HashModel      PrimaryErrorCode = 0203
 	InstallerModel PrimaryErrorCode = 0204
 	LinkModel      PrimaryErrorCode = 0205
+
+	// Handler
+	AdminUserHandler PrimaryErrorCode = 0301
+	AdminAuthHandler PrimaryErrorCode = 0302
+	LinkHandler      PrimaryErrorCode = 0303
 )
 
 type SecondaryErrorCode int
@@ -74,4 +79,13 @@ const (
 	LinkModel_FailedUpdate         SecondaryErrorCode = 0301
 	LinkModel_UpdatingLinkNotFound SecondaryErrorCode = 0302
 	LinkModel_FailedDelete         SecondaryErrorCode = 0401
+
+	// AdminUserHandler
+	AdminUserHandler_FailedBindJson SecondaryErrorCode = 0101
+
+	// AdminAuthHandler
+	AdminAuthHandler_FailedBindJson SecondaryErrorCode = 0101
+
+	// LinkHandler
+	LinkHandler_FailedBindJson SecondaryErrorCode = 0101
 )
