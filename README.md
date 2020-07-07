@@ -27,6 +27,7 @@ URL shortener service for private use.
 - Nuxt.js
     - TypeScript
     - Vuetify.js
+    - nuxt-property-decorator
 - ESLint
 
 
