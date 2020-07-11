@@ -12,7 +12,7 @@
   </v-app>
 </template>
 
-<script>
+<script lang="ts">
 export default {
   layout: 'empty',
   props: {
@@ -37,7 +37,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 h1 {
   font-size: 20px;
 }

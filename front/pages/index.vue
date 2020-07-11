@@ -71,7 +71,7 @@
   </v-layout>
 </template>
 
-<script>
+<script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator'
 
 @Component
