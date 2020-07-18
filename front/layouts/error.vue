@@ -1,26 +1,31 @@
 <template>
-  <v-app dark>
-    <h1 v-if="error.statusCode === 404">
-      {{ pageNotFound }}
-    </h1>
-    <h1 v-else>
-      {{ otherError }}
-    </h1>
-    <NuxtLink to="/">
-      Home page
-    </NuxtLink>
-  </v-app>
+  <div>
+    <v-row>
+      <v-col>
+        <h1 v-if="error.statusCode === 404">
+          {{ pageNotFound }}
+        </h1>
+        <h1 v-else>
+          {{ otherError }}
+        </h1>
+        <NuxtLink to="/">
+          Home page
+        </NuxtLink>
+      </v-col>
+    </v-row>
+  </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'nuxt-property-decorator'
 
-@Component
+  @Component({
+    layout: 'blank'
+  })
 export default class Blank extends Vue {
     @Prop({ default: null })
     readonly error!: any
 
-    layout = 'empty'
     pageNotFound = '404 Not Found'
     otherError = 'An error occurred'
 
@@ -34,9 +39,3 @@ export default class Blank extends Vue {
     }
 }
 </script>
-
-<style lang="scss" scoped>
-  h1 {
-    font-size: 20px;
-  }
-</style>

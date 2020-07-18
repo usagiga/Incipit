@@ -74,7 +74,9 @@
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator'
 
-@Component
+@Component({
+  layout: 'blank'
+})
 export default class Index extends Vue {
 }
 </script>
