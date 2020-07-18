@@ -2,27 +2,18 @@
   <div>
     <v-row>
       <v-col>
-        <v-card
-          class="mx-auto"
-          max-width="320"
-        >
-          <v-card-title>
-            Incipit
-          </v-card-title>
-          <v-card-text>
-            <p>URL shortener service for private use.</p>
-          </v-card-text>
-          <v-card-actions>
-            <v-btn text to="/login">
-              Login
-            </v-btn>
-            <v-btn text href="https://github.com/usagiga/Incipit">
-              <v-icon>
-                mdi-github
-              </v-icon>
-            </v-btn>
-          </v-card-actions>
-        </v-card>
+        <h1>Incipit</h1>
+
+        <p>Incipit is URL shortener service for private use.</p>
+
+        <v-btn text to="/login">
+          Login
+        </v-btn>
+        <v-btn text href="https://github.com/usagiga/Incipit">
+          <v-icon>
+            mdi-github
+          </v-icon>
+        </v-btn>
       </v-col>
     </v-row>
   </div>
@@ -35,5 +26,11 @@ import { Vue, Component } from 'nuxt-property-decorator'
     layout: 'blank'
   })
 export default class Index extends Vue {
+  head () {
+    return {
+      title: 'Incipit',
+      titleTemplate: ''
+    }
+  }
 }
 </script>
