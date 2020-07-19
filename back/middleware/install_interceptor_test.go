@@ -12,7 +12,7 @@ import (
 	"testing"
 )
 
-func TestInstallInterceptorImpl_Handle(t *testing.T) {
+func TestInstallInterceptorImpl_HandleNeededInstall(t *testing.T) {
 	// Declare test cases
 	testCases := []struct {
 		ExpectedStatusCode    int
@@ -32,7 +32,7 @@ func TestInstallInterceptorImpl_Handle(t *testing.T) {
 		ii := &InstallInterceptorImpl{installerModel: v.TestingInstallerModel}
 
 		// Exec
-		ii.Handle(ctx)
+		ii.HandleNeededInstall(ctx)
 
 		// Check status code
 		expectedCode := v.ExpectedStatusCode

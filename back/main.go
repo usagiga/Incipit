@@ -51,7 +51,7 @@ func main() {
 
 	// Register to gin
 	router := gin.Default()
-	router.Use(installInterceptor.Handle)
+	router.Use(installInterceptor.HandleNeededInstall)
 
 	adminUserGroup := router.Group("/api/admin/")
 	adminUserGroup.Use(authInterceptor.Handle)

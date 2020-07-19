@@ -14,7 +14,7 @@ func NewInstallInterceptor(installerModel model.InstallerModel) InstallIntercept
 	return &InstallInterceptorImpl{installerModel: installerModel}
 }
 
-func (m *InstallInterceptorImpl) Handle(c *gin.Context) {
+func (m *InstallInterceptorImpl) HandleNeededInstall(c *gin.Context) {
 	isNeeded, err := m.installerModel.IsNeededInstall()
 	if err != nil {
 		resp := messages.NewErrorResponse(err)
@@ -31,4 +31,8 @@ func (m *InstallInterceptorImpl) Handle(c *gin.Context) {
 		c.AbortWithStatusJSON(sCode, resp)
 		return
 	}
+}
+
+func (m *InstallInterceptorImpl) HandleRedundantInstall(c *gin.Context) {
+	panic("implement me")
 }

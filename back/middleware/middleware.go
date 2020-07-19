@@ -6,8 +6,13 @@ import (
 
 // InstallInterceptor treats installing if Incipit is needed to initialize
 type InstallInterceptor interface {
-	// Handle is to handle validation in middleware chain
-	Handle(c *gin.Context)
+	// HandleNeededInstall is to handle validation in middleware chain.
+	// It will abort requests if this app needs to install
+	HandleNeededInstall(c *gin.Context)
+
+	// HandleRedundantInstall is to handle validation in middleware chain.
+	// It will abort requests if this app doesn't need to install
+	HandleRedundantInstall(c *gin.Context)
 }
 
 // AuthInterceptor treats authentication user
