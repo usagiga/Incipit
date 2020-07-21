@@ -25,7 +25,7 @@ func (m *InstallInterceptorImpl) HandleNeededInstall(c *gin.Context) {
 	}
 
 	if isNeeded {
-		resp := messages.NewRequiredInstallResponse()
+		resp := messages.NewNeededInstallResponse()
 		sCode := resp.GetHTTPStatusCode()
 
 		c.AbortWithStatusJSON(sCode, resp)

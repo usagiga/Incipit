@@ -20,7 +20,7 @@ func TestInstallInterceptorImpl_HandleNeededInstall(t *testing.T) {
 		TestingInstallerModel model.InstallerModel
 	}{
 		{ExpectedStatusCode: http.StatusOK, ExpectedResponseType: "", TestingInstallerModel: installerModelStub{isNeeded: false, err: nil}},
-		{ExpectedStatusCode: http.StatusServiceUnavailable, ExpectedResponseType: "required_install", TestingInstallerModel: installerModelStub{isNeeded: true, err: nil}},
+		{ExpectedStatusCode: http.StatusServiceUnavailable, ExpectedResponseType: "needed_install", TestingInstallerModel: installerModelStub{isNeeded: true, err: nil}},
 		{ExpectedStatusCode: http.StatusInternalServerError, ExpectedResponseType: "error", TestingInstallerModel: installerModelStub{isNeeded: false, err: xerrors.New("something wrong")}},
 	}
 
