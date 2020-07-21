@@ -34,5 +34,20 @@ func (m *InstallInterceptorImpl) HandleNeededInstall(c *gin.Context) {
 }
 
 func (m *InstallInterceptorImpl) HandleRedundantInstall(c *gin.Context) {
-	panic("implement me")
+	isNeeded, err := m.installerModel.IsNeededInstall()
+	if err != nil {
+		resp := messages.NewErrorResponse(err)
+		sCode := resp.GetHTTPStatusCode()
+
+		c.AbortWithStatusJSON(sCode, resp)
+		return
+	}
+
+	if !isNeeded {
+		resp := messages.NewRedundantInstallResponse()
+		sCode := resp.GetHTTPStatusCode()
+
+		c.AbortWithStatusJSON(sCode, resp)
+		return
+	}
 }
