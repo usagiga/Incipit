@@ -48,6 +48,11 @@ func (resp *ErrorResponse) GetHTTPStatusCode() int {
 		return http.StatusBadRequest
 	}
 
+	if interr.PrimaryErrorCode(resp.PrimaryErrorCode) == interr.InstallerHandler &&
+		interr.SecondaryErrorCode(resp.SecondaryErrorCode) == interr.InstallHandler_FailedBindJson {
+		return http.StatusBadRequest
+	}
+
 	// Validation
 	if interr.PrimaryErrorCode(resp.PrimaryErrorCode) == interr.AdminUserValidation  {
 		return http.StatusBadRequest

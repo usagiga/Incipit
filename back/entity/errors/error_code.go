@@ -24,6 +24,7 @@ const (
 	AdminUserHandler PrimaryErrorCode = 0301
 	AdminAuthHandler PrimaryErrorCode = 0302
 	LinkHandler      PrimaryErrorCode = 0303
+	InstallerHandler      PrimaryErrorCode = 0304
 )
 
 type SecondaryErrorCode int
@@ -88,4 +89,7 @@ const (
 
 	// LinkHandler
 	LinkHandler_FailedBindJson SecondaryErrorCode = 0101
+
+	// InstallHandler
+	InstallHandler_FailedBindJson SecondaryErrorCode = 0101
 )
