@@ -48,6 +48,7 @@ func main() {
 	adminUserHandler := handler.NewAdminUserHandler(adminModel)
 	adminAuthHandler := handler.NewAdminAuthHandler(adminAuthModel)
 	linkHandler := handler.NewLinkHandler(linkModel)
+	installHandler := handler.NewInstallHandler(installerModel)
 
 	// Register to gin
 	router := gin.Default()
@@ -71,6 +72,10 @@ func main() {
 	linkGroup.PATCH("/", linkHandler.HandleUpdateLink)
 	linkGroup.DELETE("/", linkHandler.HandleDeleteLink)
 	router.GET("/api/link/shortened", linkHandler.HandleGetLinkByShortURL) // Unnecessary auth
+
+	installerGroup := router.Group("/api/install")
+	installerGroup.Use(installInterceptor.HandleRedundantInstall)
+	installerGroup.GET("/", installHandler.HandleInstall)
 
 	// Launch
 	port := strconv.Itoa(c.IncipitPort)
