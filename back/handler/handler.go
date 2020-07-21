@@ -32,3 +32,8 @@ type LinkHandler interface {
 	// DELETE /api/link
 	HandleDeleteLink(c *gin.Context)
 }
+
+type InstallerHandler interface {
+	// POST /api/install
+	HandleInstall(c *gin.Context)
+}
