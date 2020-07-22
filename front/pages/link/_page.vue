@@ -37,7 +37,7 @@
 import { Vue, Component } from 'nuxt-property-decorator'
 
   @Component
-export default class AdminList extends Vue {
+export default class LinkList extends Vue {
     page: number = 1
     pageParam: number = 1
     length: number = 10
