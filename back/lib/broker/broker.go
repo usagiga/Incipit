@@ -39,6 +39,7 @@ func (b *DBBroker) Open(dbChan chan *gorm.DB, dialect string, args ...interface{
 		b.configureDB(db.DB(), b.config)
 
 		// Return result
+		logger.Println("Complete initializing DB.")
 		dbChan <- db
 		return
 	}
