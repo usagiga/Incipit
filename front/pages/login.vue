@@ -36,10 +36,12 @@
 </template>
 
 <script lang="ts">
-/* eslint-disable no-console */
+/* eslint-disable no-console,camelcase */
 
 import { Vue, Component } from 'nuxt-property-decorator'
 import { VForm } from '~/types/v-form'
+import IncipitApi from '~/utils/incipit-api'
+import TokenStore from '~/utils/token-store'
 
   @Component({
     layout: 'blank'
@@ -68,10 +70,22 @@ export default class Login extends Vue {
         return
       }
 
-      // TODO : Send cred to server
-      // Temp
-      console.log(this.userName)
-      console.log(this.password)
+      // Login
+      IncipitApi(this.$router)
+        .login(this.userName, this.password)
+        .then((resJson: any) => {
+          if (resJson?.type !== 'login_admin') { return }
+
+          // Set token pair
+          TokenStore.accessToken = resJson?.access_token?.token
+          TokenStore.refreshToken = resJson?.refresh_token?.token
+
+          // Redirect
+          this.$router.push('/link')
+        })
+        .catch((err: any) => {
+          console.error(err)
+        })
     }
 
     head () {
