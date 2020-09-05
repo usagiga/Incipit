@@ -22,5 +22,11 @@ back_clean:
 back_run:
 	@cd $(BACK_DIR) && go run .
 
+back_run_air:
+	@cd $(BACK_DIR) && air
+
 back_test:
 	@cd $(BACK_DIR) && go test -v "./..."
+
+back_test_air:
+	@cd $(BACK_DIR) && air -c .air-test.toml

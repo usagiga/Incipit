@@ -4,6 +4,7 @@
 *.dll
 *.so
 *.dylib
+back/incipit
 
 # Test binary, built with `go test -c`
 *.test
@@ -21,3 +22,6 @@
 
 # MariaDB Data Dir
 /docker/db/datadir/
+
+# cosmtrek/air
+back/tmp

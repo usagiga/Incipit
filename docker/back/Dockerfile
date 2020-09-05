@@ -2,4 +2,6 @@ FROM golang:1.14
 
 WORKDIR /go/src/github.com/usagiga/Incipit
 
-CMD ["make", "back_run"]
+RUN go get -u github.com/cosmtrek/air
+
+CMD ["make", "back_run_air"]
