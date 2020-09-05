@@ -18,6 +18,12 @@ export default {
     ]
   },
   /*
+  ** Environments
+  */
+  env: {
+    apiBaseUrl: process.env.INCIPIT_API || 'http://localhost:8080/api/'
+  },
+  /*
   ** Customize the progress-bar color
   */
   loading: { color: '#fff' },
