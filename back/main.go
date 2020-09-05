@@ -1,26 +1,26 @@
 package main
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/usagiga/Incipit/back/entity"
 	"github.com/usagiga/Incipit/back/handler"
-	"github.com/usagiga/Incipit/back/lib/config"
+	libConfig "github.com/usagiga/Incipit/back/lib/config"
 	"github.com/usagiga/Incipit/back/middleware"
 	"github.com/usagiga/Incipit/back/model"
 	"log"
-	"strconv"
 )
 
 func main() {
 	// Load config
-	c := &entity.Config{}
-	err := config.Load(c)
+	config := &entity.Config{}
+	err := libConfig.Load(config)
 	if err != nil {
 		log.Fatalln(err)
 	}
 
 	// Connect to DB
-	db := ConnectToDB(c.MySQLUser, c.MySQLPassword, c.MySQLHost, c.MySQLPort)
+	db := ConnectToDB(config.MySQLUser, config.MySQLPassword, config.MySQLHost, config.MySQLPort)
 	defer db.Close()
 
 	// Auto migrate
@@ -34,7 +34,7 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	linkValidator := model.NewLinkValidator(c.IncipitHost)
+	linkValidator := model.NewLinkValidator(config.IncipitHost)
 
 	hashModel := model.NewHashModel()
 	adminModel := model.NewAdminModel(db, hashModel, adminUserValidator)
@@ -78,7 +78,7 @@ func main() {
 	installerGroup.GET("/", installHandler.HandleInstall)
 
 	// Launch
-	port := strconv.Itoa(c.IncipitPort)
+	port := fmt.Sprintf(":%d", config.IncipitPort)
 	err = router.Run(port)
 	if err != nil {
 		log.Fatalln(err)
