@@ -52,26 +52,27 @@ func main() {
 
 	// Register to gin
 	router := gin.Default()
-	router.Use(installInterceptor.HandleNeededInstall)
+	normalScenarioGroup := router.Group("/")
+	normalScenarioGroup.Use(installInterceptor.HandleNeededInstall)
 
-	adminUserGroup := router.Group("/api/admin/")
+	adminUserGroup := normalScenarioGroup.Group("/api/admin/")
 	adminUserGroup.Use(authInterceptor.Handle)
 	adminUserGroup.GET("/", adminUserHandler.HandleGetAdmin)
 	adminUserGroup.POST("/", adminUserHandler.HandleCreateAdmin)
 	adminUserGroup.PATCH("/", adminUserHandler.HandleUpdateAdmin)
 	adminUserGroup.DELETE("/", adminUserHandler.HandleDeleteAdmin)
 
-	loginGroup := router.Group("/api/login")
+	loginGroup := normalScenarioGroup.Group("/api/login")
 	loginGroup.POST("/", adminAuthHandler.HandleLogin)
 	loginGroup.POST("/refresh", adminAuthHandler.HandleRefreshToken)
 
-	linkGroup := router.Group("/api/link")
+	linkGroup := normalScenarioGroup.Group("/api/link")
 	linkGroup.Use(authInterceptor.Handle)
 	linkGroup.GET("/", linkHandler.HandleGetLink)
 	linkGroup.POST("/", linkHandler.HandleCreateLink)
 	linkGroup.PATCH("/", linkHandler.HandleUpdateLink)
 	linkGroup.DELETE("/", linkHandler.HandleDeleteLink)
-	router.GET("/api/link/shortened", linkHandler.HandleGetLinkByShortURL) // Unnecessary auth
+	normalScenarioGroup.GET("/api/link/shortened", linkHandler.HandleGetLinkByShortURL) // Unnecessary auth
 
 	installerGroup := router.Group("/api/install")
 	installerGroup.Use(installInterceptor.HandleRedundantInstall)
