@@ -18,19 +18,7 @@ func NewAdminUserHandler(adminModel model.AdminModel) AdminUserHandler {
 }
 
 func (h *AdminUserHandlerImpl) HandleGetAdmin(c *gin.Context) {
-	req := &messages.GetAdminRequest{}
-	err := c.ShouldBindJSON(req)
-	if err != nil {
-		err = interr.NewDistinctError("Can't bind JSON", interr.AdminUserHandler, interr.AdminUserHandler_FailedBindJson, nil)
-
-		res := messages.NewErrorResponse(err)
-		sCode := res.GetHTTPStatusCode()
-
-		c.AbortWithStatusJSON(sCode, res)
-		return
-	}
-
-	found, err := h.adminModel.FindOne(req.ID)
+	founds, err := h.adminModel.Find()
 	if err != nil {
 		res := messages.NewErrorResponse(err)
 		sCode := res.GetHTTPStatusCode()
@@ -39,7 +27,7 @@ func (h *AdminUserHandlerImpl) HandleGetAdmin(c *gin.Context) {
 		return
 	}
 
-	res := messages.NewGetAdminResponse(found)
+	res := messages.NewGetAdminResponse(founds)
 	sCode := res.GetHTTPStatusCode()
 
 	c.JSON(sCode, res)

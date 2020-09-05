@@ -20,19 +20,7 @@ func NewLinkHandler(linkModel model.LinkModel) LinkHandler {
 }
 
 func (h *LinkHandlerImpl) HandleGetLink(c *gin.Context) {
-	req := &messages.GetLinkRequest{}
-	err := c.ShouldBindJSON(req)
-	if err != nil {
-		err = interr.NewDistinctError("Can't bind JSON", interr.LinkHandler, interr.LinkHandler_FailedBindJson, nil)
-
-		res := messages.NewErrorResponse(err)
-		sCode := res.GetHTTPStatusCode()
-
-		c.AbortWithStatusJSON(sCode, res)
-		return
-	}
-
-	found, err := h.linkModel.FindOne(req.ID)
+	founds, err := h.linkModel.Find()
 	if err != nil {
 		res := messages.NewErrorResponse(err)
 		sCode := res.GetHTTPStatusCode()
@@ -41,7 +29,7 @@ func (h *LinkHandlerImpl) HandleGetLink(c *gin.Context) {
 		return
 	}
 
-	res := messages.NewGetLinkResponse(found)
+	res := messages.NewGetLinkResponse(founds)
 	sCode := res.GetHTTPStatusCode()
 
 	c.JSON(sCode, res)
@@ -49,9 +37,9 @@ func (h *LinkHandlerImpl) HandleGetLink(c *gin.Context) {
 
 func (h *LinkHandlerImpl) HandleGetLinkByShortURL(c *gin.Context) {
 	req := &messages.GetLinkByShortIDRequest{}
-	err := c.ShouldBindJSON(req)
+	err := c.ShouldBindQuery(req)
 	if err != nil {
-		err = interr.NewDistinctError("Can't bind JSON", interr.LinkHandler, interr.LinkHandler_FailedBindJson, nil)
+		err = interr.NewDistinctError("Can't bind query parameter", interr.LinkHandler, interr.LinkHandler_FailedBindQuery, nil)
 
 		res := messages.NewErrorResponse(err)
 		sCode := res.GetHTTPStatusCode()
@@ -79,7 +67,7 @@ func (h *LinkHandlerImpl) HandleCreateLink(c *gin.Context) {
 	req := &messages.CreateLinkRequest{}
 	err := c.ShouldBindJSON(req)
 	if err != nil {
-		err = interr.NewDistinctError("Can't bind JSON", interr.LinkHandler, interr.LinkHandler_FailedBindJson, nil)
+		err = interr.NewDistinctError("Can't bind JSON", interr.LinkHandler, interr.LinkHandler_FailedBindQuery, nil)
 
 		res := messages.NewErrorResponse(err)
 		sCode := res.GetHTTPStatusCode()
@@ -110,7 +98,7 @@ func (h *LinkHandlerImpl) HandleUpdateLink(c *gin.Context) {
 	req := &messages.UpdateLinkRequest{}
 	err := c.ShouldBindJSON(req)
 	if err != nil {
-		err = interr.NewDistinctError("Can't bind JSON", interr.LinkHandler, interr.LinkHandler_FailedBindJson, nil)
+		err = interr.NewDistinctError("Can't bind JSON", interr.LinkHandler, interr.LinkHandler_FailedBindQuery, nil)
 
 		res := messages.NewErrorResponse(err)
 		sCode := res.GetHTTPStatusCode()
@@ -142,7 +130,7 @@ func (h *LinkHandlerImpl) HandleDeleteLink(c *gin.Context) {
 	req := &messages.DeleteLinkRequest{}
 	err := c.ShouldBindJSON(req)
 	if err != nil {
-		err = interr.NewDistinctError("Can't bind JSON", interr.LinkHandler, interr.LinkHandler_FailedBindJson, nil)
+		err = interr.NewDistinctError("Can't bind JSON", interr.LinkHandler, interr.LinkHandler_FailedBindQuery, nil)
 
 		res := messages.NewErrorResponse(err)
 		sCode := res.GetHTTPStatusCode()

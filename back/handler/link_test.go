@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"github.com/usagiga/Incipit/back/entity"
@@ -24,10 +25,10 @@ func TestLinkHandlerImpl_HandleCreateLink(t *testing.T) {
 		ExpectedResponseType string
 		ReqBodyStr           string
 	}{
-		{ExpectedStatusCode: 200, ExpectedResponseType: "create_link", ReqBodyStr: `{"url":"valid"}`}, // Valid
+		{ExpectedStatusCode: 200, ExpectedResponseType: "create_link", ReqBodyStr: `{"url":"valid"}`},       // Valid
 		{ExpectedStatusCode: 200, ExpectedResponseType: "create_link", ReqBodyStr: `{"invalid":"invalid"}`}, // Unexpected JSON. There's no wrong point *in handler*, model will raise error
-		{ExpectedStatusCode: 400, ExpectedResponseType: "error", ReqBodyStr: `invalid`}, // Invalid JSON
-		{ExpectedStatusCode: 500, ExpectedResponseType: "error", ReqBodyStr: `{"url":"invalid"}`}, // Invalid URL
+		{ExpectedStatusCode: 400, ExpectedResponseType: "error", ReqBodyStr: `invalid`},                     // Invalid JSON
+		{ExpectedStatusCode: 500, ExpectedResponseType: "error", ReqBodyStr: `{"url":"invalid"}`},           // Invalid URL
 	}
 
 	// Do test
@@ -74,12 +75,8 @@ func TestLinkHandlerImpl_HandleGetLink(t *testing.T) {
 	testCases := []struct {
 		ExpectedStatusCode   int
 		ExpectedResponseType string
-		ReqBodyStr           string
 	}{
-		{ExpectedStatusCode: 200, ExpectedResponseType: "get_link", ReqBodyStr: `{"id":1}`}, // Valid
-		{ExpectedStatusCode: 200, ExpectedResponseType: "get_link", ReqBodyStr: `{"invalid":"invalid"}`}, // Unexpected JSON. There's no wrong point *in handler*, model will raise error
-		{ExpectedStatusCode: 400, ExpectedResponseType: "error", ReqBodyStr: `invalid`}, // Invalid JSON
-		{ExpectedStatusCode: 500, ExpectedResponseType: "error", ReqBodyStr: `{"id":1000}`}, // Invalid URL
+		{ExpectedStatusCode: 200, ExpectedResponseType: "get_link"},
 	}
 
 	// Do test
@@ -88,8 +85,7 @@ func TestLinkHandlerImpl_HandleGetLink(t *testing.T) {
 		w := httptest.NewRecorder()
 
 		// Exec
-		reqBodyReader := strings.NewReader(v.ReqBodyStr)
-		req := httptest.NewRequest("GET", "/test", reqBodyReader)
+		req := httptest.NewRequest("GET", "/test", nil)
 
 		router.ServeHTTP(w, req)
 
@@ -126,12 +122,10 @@ func TestLinkHandlerImpl_HandleGetLinkByShortURL(t *testing.T) {
 	testCases := []struct {
 		ExpectedStatusCode   int
 		ExpectedResponseType string
-		ReqBodyStr           string
+		QueryStr             string
 	}{
-		{ExpectedStatusCode: 200, ExpectedResponseType: "get_link_by_short_id", ReqBodyStr: `{"short_id":"1"}`}, // Valid
-		{ExpectedStatusCode: 200, ExpectedResponseType: "get_link_by_short_id", ReqBodyStr: `{"invalid":"invalid"}`}, // Unexpected JSON. There's no wrong point *in handler*, model will raise error
-		{ExpectedStatusCode: 400, ExpectedResponseType: "error", ReqBodyStr: `invalid`}, // Invalid JSON
-		{ExpectedStatusCode: 500, ExpectedResponseType: "error", ReqBodyStr: `{"short_id":"0"}`}, // Invalid URL
+		{ExpectedStatusCode: 200, ExpectedResponseType: "get_link_by_short_id", QueryStr: `?short_id=1}`},     // Valid
+		{ExpectedStatusCode: 200, ExpectedResponseType: "get_link_by_short_id", QueryStr: `?invalid=invalid`}, // Unexpected JSON. There's no wrong point *in handler*, model will raise error
 	}
 
 	// Do test
@@ -140,8 +134,8 @@ func TestLinkHandlerImpl_HandleGetLinkByShortURL(t *testing.T) {
 		w := httptest.NewRecorder()
 
 		// Exec
-		reqBodyReader := strings.NewReader(v.ReqBodyStr)
-		req := httptest.NewRequest("GET", "/test", reqBodyReader)
+		reqTarget := fmt.Sprintf("/test%s", v.QueryStr)
+		req := httptest.NewRequest("GET", reqTarget, nil)
 
 		router.ServeHTTP(w, req)
 
@@ -180,10 +174,10 @@ func TestLinkHandlerImpl_HandleUpdateLink(t *testing.T) {
 		ExpectedResponseType string
 		ReqBodyStr           string
 	}{
-		{ExpectedStatusCode: 200, ExpectedResponseType: "update_link", ReqBodyStr: `{"id":1}`}, // Valid
+		{ExpectedStatusCode: 200, ExpectedResponseType: "update_link", ReqBodyStr: `{"id":1}`},              // Valid
 		{ExpectedStatusCode: 200, ExpectedResponseType: "update_link", ReqBodyStr: `{"invalid":"invalid"}`}, // Unexpected JSON. There's no wrong point *in handler*, model will raise error
-		{ExpectedStatusCode: 400, ExpectedResponseType: "error", ReqBodyStr: `invalid`}, // Invalid JSON
-		{ExpectedStatusCode: 500, ExpectedResponseType: "error", ReqBodyStr: `{"id":1000}`}, // Invalid URL
+		{ExpectedStatusCode: 400, ExpectedResponseType: "error", ReqBodyStr: `invalid`},                     // Invalid JSON
+		{ExpectedStatusCode: 500, ExpectedResponseType: "error", ReqBodyStr: `{"id":1000}`},                 // Invalid URL
 	}
 
 	// Do test
@@ -232,10 +226,10 @@ func TestLinkHandlerImpl_HandleDeleteLink(t *testing.T) {
 		ExpectedResponseType string
 		ReqBodyStr           string
 	}{
-		{ExpectedStatusCode: 200, ExpectedResponseType: "delete_link", ReqBodyStr: `{"id":1}`}, // Valid
+		{ExpectedStatusCode: 200, ExpectedResponseType: "delete_link", ReqBodyStr: `{"id":1}`},              // Valid
 		{ExpectedStatusCode: 200, ExpectedResponseType: "delete_link", ReqBodyStr: `{"invalid":"invalid"}`}, // Unexpected JSON. There's no wrong point *in handler*, model will raise error
-		{ExpectedStatusCode: 400, ExpectedResponseType: "error", ReqBodyStr: `invalid`}, // Invalid JSON
-		{ExpectedStatusCode: 500, ExpectedResponseType: "error", ReqBodyStr: `{"id":1000}`}, // Invalid URL
+		{ExpectedStatusCode: 400, ExpectedResponseType: "error", ReqBodyStr: `invalid`},                     // Invalid JSON
+		{ExpectedStatusCode: 500, ExpectedResponseType: "error", ReqBodyStr: `{"id":1000}`},                 // Invalid URL
 	}
 
 	// Do test
@@ -278,32 +272,32 @@ func (m *linkModelStub) Add(link *entity.Link) (added *entity.Link, err error) {
 	if link.URL == "invalid" {
 		return nil, errors.New("invalid link")
 	}
-	return &entity.Link{Model: gorm.Model{ID:1}, URL: "valid"}, nil
+	return &entity.Link{Model: gorm.Model{ID: 1}, URL: "valid"}, nil
 }
 
 func (m *linkModelStub) FindOne(id uint) (link *entity.Link, err error) {
 	if id == 1000 {
 		return nil, errors.New("invalid link")
 	}
-	return &entity.Link{Model: gorm.Model{ID:1}, URL: "valid"}, nil
+	return &entity.Link{Model: gorm.Model{ID: 1}, URL: "valid"}, nil
 }
 
 func (m *linkModelStub) FindOneByShortID(shortId string) (link *entity.Link, err error) {
 	if shortId == "0" {
 		return nil, errors.New("invalid link")
 	}
-	return &entity.Link{Model: gorm.Model{ID:1}, URL: "valid"}, nil
+	return &entity.Link{Model: gorm.Model{ID: 1}, URL: "valid"}, nil
 }
 
 func (m *linkModelStub) Find() (links []entity.Link, err error) {
-	panic("implement me")
+	return []entity.Link{{Model: gorm.Model{ID: 1}, URL: "valid"}}, nil
 }
 
 func (m *linkModelStub) Update(updating *entity.Link) (updated *entity.Link, err error) {
 	if updating.ID == 1000 {
 		return nil, errors.New("invalid link")
 	}
-	return &entity.Link{Model: gorm.Model{ID:1}, URL: "valid"}, nil
+	return &entity.Link{Model: gorm.Model{ID: 1}, URL: "valid"}, nil
 }
 
 func (m *linkModelStub) Delete(id uint) (err error) {

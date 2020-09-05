@@ -17,7 +17,7 @@ func TestInstallerHandlerImpl_HandleInstall(t *testing.T) {
 	ih := NewInstallHandler(&installModelStub{})
 
 	_, router := gin.CreateTestContext(nil)
-	router.GET("/test", ih.HandleInstall)
+	router.POST("/test", ih.HandleInstall)
 
 	// Declare test cases
 	testCases := []struct {
@@ -38,7 +38,7 @@ func TestInstallerHandlerImpl_HandleInstall(t *testing.T) {
 
 		// Exec
 		reqBodyReader := strings.NewReader(v.ReqBodyStr)
-		req := httptest.NewRequest("GET", "/test", reqBodyReader)
+		req := httptest.NewRequest("POST", "/test", reqBodyReader)
 
 		router.ServeHTTP(w, req)
 

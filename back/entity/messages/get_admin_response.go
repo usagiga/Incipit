@@ -8,14 +8,20 @@ import (
 type GetAdminResponse struct {
 	BaseResponse
 
-	AdminUser AdminUser `json:"admin_user"`
+	AdminUsers []AdminUser `json:"admin_users"`
 }
 
-func NewGetAdminResponse(user *entity.AdminUser) (resp Response) {
-	resUser := AdminUser{
-		ID:         user.ID,
-		Name:       user.Name,
-		ScreenName: user.Password,
+func NewGetAdminResponse(users []entity.AdminUser) (resp Response) {
+	resUsers := make([]AdminUser, len(users))
+
+	for i, user := range users {
+		resUser := AdminUser{
+			ID:         user.ID,
+			Name:       user.Name,
+			ScreenName: user.Password,
+		}
+
+		resUsers[i] = resUser
 	}
 
 	return &GetAdminResponse{
@@ -23,7 +29,7 @@ func NewGetAdminResponse(user *entity.AdminUser) (resp Response) {
 			Type:    "get_admin",
 			Details: nil,
 		},
-		AdminUser: resUser,
+		AdminUsers: resUsers,
 	}
 }
 

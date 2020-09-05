@@ -73,12 +73,8 @@ func TestAdminUserHandlerImpl_HandleGetAdmin(t *testing.T) {
 	testCases := []struct {
 		ExpectedStatusCode   int
 		ExpectedResponseType string
-		ReqBodyStr           string
 	}{
-		{ExpectedStatusCode: 200, ExpectedResponseType: "get_admin", ReqBodyStr: `{"id":1}`},              // Valid
-		{ExpectedStatusCode: 200, ExpectedResponseType: "get_admin", ReqBodyStr: `{"invalid":"invalid"}`}, // Unexpected JSON. There's no wrong point *in handler*, model will raise error
-		{ExpectedStatusCode: 400, ExpectedResponseType: "error", ReqBodyStr: `invalid`},                   // Invalid JSON
-		{ExpectedStatusCode: 500, ExpectedResponseType: "error", ReqBodyStr: `{"id":1000}`},               // Invalid URL
+		{ExpectedStatusCode: 200, ExpectedResponseType: "get_admin"},
 	}
 
 	// Do test
@@ -87,8 +83,7 @@ func TestAdminUserHandlerImpl_HandleGetAdmin(t *testing.T) {
 		w := httptest.NewRecorder()
 
 		// Exec
-		reqBodyReader := strings.NewReader(v.ReqBodyStr)
-		req := httptest.NewRequest("GET", "/test", reqBodyReader)
+		req := httptest.NewRequest("GET", "/test", nil)
 
 		router.ServeHTTP(w, req)
 
@@ -129,8 +124,8 @@ func TestAdminUserHandlerImpl_HandleUpdateAdmin(t *testing.T) {
 	}{
 		{ExpectedStatusCode: 200, ExpectedResponseType: "update_admin", ReqBodyStr: `{"id":1}`},              // Valid
 		{ExpectedStatusCode: 200, ExpectedResponseType: "update_admin", ReqBodyStr: `{"invalid":"invalid"}`}, // Unexpected JSON. There's no wrong point *in handler*, model will raise error
-		{ExpectedStatusCode: 400, ExpectedResponseType: "error", ReqBodyStr: `invalid`},                   // Invalid JSON
-		{ExpectedStatusCode: 500, ExpectedResponseType: "error", ReqBodyStr: `{"id":1000}`},               // Invalid URL
+		{ExpectedStatusCode: 400, ExpectedResponseType: "error", ReqBodyStr: `invalid`},                      // Invalid JSON
+		{ExpectedStatusCode: 500, ExpectedResponseType: "error", ReqBodyStr: `{"id":1000}`},                  // Invalid URL
 	}
 
 	// Do test
@@ -181,8 +176,8 @@ func TestAdminUserHandlerImpl_HandleDeleteAdmin(t *testing.T) {
 	}{
 		{ExpectedStatusCode: 200, ExpectedResponseType: "delete_admin", ReqBodyStr: `{"id":1}`},              // Valid
 		{ExpectedStatusCode: 200, ExpectedResponseType: "delete_admin", ReqBodyStr: `{"invalid":"invalid"}`}, // Unexpected JSON. There's no wrong point *in handler*, model will raise error
-		{ExpectedStatusCode: 400, ExpectedResponseType: "error", ReqBodyStr: `invalid`},                   // Invalid JSON
-		{ExpectedStatusCode: 500, ExpectedResponseType: "error", ReqBodyStr: `{"id":1000}`},               // Invalid URL
+		{ExpectedStatusCode: 400, ExpectedResponseType: "error", ReqBodyStr: `invalid`},                      // Invalid JSON
+		{ExpectedStatusCode: 500, ExpectedResponseType: "error", ReqBodyStr: `{"id":1000}`},                  // Invalid URL
 	}
 
 	// Do test
@@ -242,7 +237,7 @@ func (m *adminModelStub) FindOneByName(name string) (user *entity.AdminUser, err
 }
 
 func (m *adminModelStub) Find() (users []entity.AdminUser, err error) {
-	panic("implement me")
+	return []entity.AdminUser{{Name: "valid", ScreenName: "valid", Password: "valid"}}, nil
 }
 
 func (m *adminModelStub) Update(updating *entity.AdminUser) (updated *entity.AdminUser, err error) {

@@ -88,7 +88,7 @@ const (
 	AdminAuthHandler_FailedBindJson SecondaryErrorCode = 0101
 
 	// LinkHandler
-	LinkHandler_FailedBindJson SecondaryErrorCode = 0101
+	LinkHandler_FailedBindQuery SecondaryErrorCode = 0101
 
 	// InstallHandler
 	InstallHandler_FailedBindJson SecondaryErrorCode = 0101

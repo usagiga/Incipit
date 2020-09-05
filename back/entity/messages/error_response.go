@@ -44,7 +44,7 @@ func (resp *ErrorResponse) GetHTTPStatusCode() int {
 	}
 
 	if interr.PrimaryErrorCode(resp.PrimaryErrorCode) == interr.LinkHandler &&
-		interr.SecondaryErrorCode(resp.SecondaryErrorCode) == interr.LinkHandler_FailedBindJson {
+		interr.SecondaryErrorCode(resp.SecondaryErrorCode) == interr.LinkHandler_FailedBindQuery {
 		return http.StatusBadRequest
 	}
 

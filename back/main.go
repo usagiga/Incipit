@@ -75,7 +75,7 @@ func main() {
 
 	installerGroup := router.Group("/api/install")
 	installerGroup.Use(installInterceptor.HandleRedundantInstall)
-	installerGroup.GET("/", installHandler.HandleInstall)
+	installerGroup.POST("/", installHandler.HandleInstall)
 
 	// Launch
 	port := fmt.Sprintf(":%d", config.IncipitPort)

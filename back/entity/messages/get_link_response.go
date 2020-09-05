@@ -8,18 +8,24 @@ import (
 type GetLinkResponse struct {
 	BaseResponse
 
-	Link Link `json:"link"`
+	Links []Link `json:"links"`
 }
 
-func NewGetLinkResponse(link *entity.Link) (resp *GetLinkResponse) {
-	resLink := Link{
-		ID:  link.ID,
-		URL: link.URL,
+func NewGetLinkResponse(links []entity.Link) (resp *GetLinkResponse) {
+	resLinks := make([]Link, len(links))
+
+	for i, link := range links {
+		resLink := Link{
+			ID:  link.ID,
+			URL: link.URL,
+		}
+
+		resLinks[i] = resLink
 	}
 
 	return &GetLinkResponse{
 		BaseResponse: BaseResponse{Type: "get_link", Details: nil},
-		Link:         resLink,
+		Links:        resLinks,
 	}
 }
 
