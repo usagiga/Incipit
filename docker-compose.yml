@@ -12,6 +12,11 @@ services:
     build:
       context: .
       dockerfile: ./docker/front/Dockerfile
+    environment:
+      INCIPIT_API: http://localhost:8080/api/
+    volumes:
+      - ./front:/go/src/github.com/usagiga/Incipit/front
+      - /go/src/github.com/usagiga/Incipit/front/node_modules
   back:
     build:
       context: .

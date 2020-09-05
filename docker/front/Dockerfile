@@ -1,9 +1,9 @@
 FROM node:14
 
-WORKDIR /go/src/github.com/usagiga/Incipit
+WORKDIR /go/src/github.com/usagiga/Incipit/front
 
-ADD . .
+ADD ./front/package.json .
 
-RUN cd ./front && npm i
+RUN npm i
 
-CMD ["make", "front_run"]
+CMD ["npm", "run", "dev"]
