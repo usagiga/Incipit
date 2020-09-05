@@ -12,9 +12,9 @@ type Link struct {
 }
 
 type AccessToken struct {
-	Token string
+	Token string `json:"token"`
 }
 
 type RefreshToken struct {
-	Token string
+	Token string `json:"token"`
 }
