@@ -5,8 +5,6 @@ Please set it up before using Incipit in your own server.
 - Go (1.14 or higher)
 - MariaDB (10.4 or higher)
 - npm
-    - Nuxt.js
-        - nuxt-property-decorator
 
 
 # Develop Dependencies
@@ -31,8 +29,8 @@ If you want to set up develop environment, See [Installation](./install.md).
         - TypeScript
         - Vuetify.js
         - nuxt-property-decorator
-        - See also: `front/package.json`
     - ESLint
+    - See also: `front/package.json`
 
 
 ## Infrastructure
