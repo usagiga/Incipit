@@ -5,7 +5,7 @@ URL shortener service for private use.
 
 ## Installation
 
-1. Install [Dependencies](./docs/docker.md)
+1. Install [Dependencies](./docs/dependencies.md)
 1. Clone it.
 1. ... (WIP)
 
