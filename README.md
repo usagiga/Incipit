@@ -5,7 +5,12 @@ URL shortener service for private use.
 
 ## Installation
 
+1. Install [Dependencies](./docs/docker.md)
+1. Clone it.
+1. ... (WIP)
 
+And you can use Docker Compose.
+See also [Docker](./docs/docker.md).
 
 ## Usage
 
@@ -13,30 +18,7 @@ URL shortener service for private use.
 
 ## Dependencies
 
-
-### Backend
-
-- Go
-    - Gin
-    - Gorm
-- MariaDB
-
-
-### Frontend
-
-- Nuxt.js
-    - TypeScript
-    - Vuetify.js
-    - nuxt-property-decorator
-- ESLint
-
-
-### Infrastructure
-
-- h2o
-- Docker
-    - Compose
-- GitHub Actions
+See [Dependencies](./docs/dependencies.md).
 
 
 ## License
