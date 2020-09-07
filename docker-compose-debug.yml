@@ -1,0 +1,44 @@
+version: '3'
+services:
+  h2o:
+    image: lkwg82/h2o-http2-server:v2.2.6
+    ports:
+      - 8080:8080
+    restart: always
+    working_dir: /etc/h2o
+    volumes:
+      - ./docker/h2o/h2o.conf:/etc/h2o/h2o.conf
+  front:
+    build:
+      context: .
+      dockerfile: ./docker/front/Dockerfile
+    environment:
+      INCIPIT_API: http://localhost:8080/api/
+    volumes:
+      - ./front:/go/src/github.com/usagiga/Incipit/front
+      - /go/src/github.com/usagiga/Incipit/front/node_modules
+  back:
+    build:
+      context: .
+      dockerfile: ./docker/back/Dockerfile-Debug
+    ports:
+      - 2345:2345
+    environment:
+      INCIPIT_HOST: example.com
+      INCIPIT_PORT: 8080
+      INCIPIT_MYSQL_HOST: db
+      INCIPIT_MYSQL_PORT: 3306
+      INCIPIT_MYSQL_USER: incipit
+      INCIPIT_MYSQL_PASS: incipit-password
+    volumes:
+      - .:/go/src/github.com/usagiga/Incipit
+  db:
+    image: mariadb/server:10.4
+    environment:
+      MARIADB_DATABASE: incipit
+      MARIADB_USER: incipit
+      MARIADB_PASSWORD: incipit-password
+      MARIADB_ROOT_PASSWORD: incipit-password
+    restart: always
+    volumes:
+      - ./docker/db/datadir:/var/lib/mysql

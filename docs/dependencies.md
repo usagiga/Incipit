@@ -10,6 +10,7 @@ Please set it up before using Incipit in your own server.
 # Develop Dependencies
 
 If you want to set up develop environment, See [Installation](./install.md).
+Or you can use Docker, See also [Docker](./docker.md).
 
 
 ## Backend
@@ -20,6 +21,7 @@ If you want to set up develop environment, See [Installation](./install.md).
     - See also: `back/go.mod`
 - MariaDB
 - (Optional) [cosmtrek/air](https://github.com/cosmtrek/air)
+- (Optional) [go-delve/delve](https://github.com/go-delve/delve)
 
 
 ## Frontend
@@ -32,6 +34,8 @@ If you want to set up develop environment, See [Installation](./install.md).
     - ESLint
     - See also: `front/package.json`
 
+If you use Docker, `node_modules` is NOT shared with a host machine.
+So, to use ESLint or completions on IDE, please run `npm i` on your host machine.
 
 ## Infrastructure
 

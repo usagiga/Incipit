@@ -30,3 +30,6 @@ back_test:
 
 back_test_air:
 	@cd $(BACK_DIR) && air -c .air-test.toml
+
+back_debug_air:
+	@cd $(BACK_DIR) && air -c .air-debug.toml

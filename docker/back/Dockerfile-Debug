@@ -1,0 +1,8 @@
+FROM golang:1.14
+
+WORKDIR /go/src/github.com/usagiga/Incipit
+
+RUN go get -u github.com/go-delve/delve/cmd/dlv
+RUN go get -u github.com/cosmtrek/air
+
+CMD ["make", "back_debug_air"]
