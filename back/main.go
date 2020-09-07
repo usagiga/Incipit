@@ -20,7 +20,7 @@ func main() {
 	}
 
 	// Connect to DB
-	db := ConnectToDB(config.MySQLUser, config.MySQLPassword, config.MySQLHost, config.MySQLPort)
+	db := ConnectToDB(config)
 	defer db.Close()
 
 	// Auto migrate
