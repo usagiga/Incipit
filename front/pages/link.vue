@@ -52,19 +52,15 @@
         </v-list-item-action>
       </v-list-item>
     </v-list>
-
-    <v-pagination
-      v-model="page"
-      :length="length"
-      total-visible="7"
-      @input="movePage"
-    />
   </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator'
 
+/**
+ * An item of link list
+ */
 class LinkItem {
     id: string
     actualUrl: string
@@ -79,10 +75,6 @@ class LinkItem {
 
   @Component
 export default class LinkList extends Vue {
-    page: number = 1
-    pageParam: number = 1
-    length: number = 10
-
     linkItems: LinkItem[] = [
       new LinkItem('Test A', 'https://example.com/'),
       new LinkItem('Test B', 'https://example.com/'),
@@ -116,23 +108,7 @@ export default class LinkList extends Vue {
       linkItem.isEditing = false
     }
 
-    movePage () {
-      if (this.pageParam === this.page) {
-        return
-      }
-
-      this.$router.push(`/link/${this.page}/`)
-    }
-
     mounted () {
-      // Parse parameters
-      this.pageParam = parseInt(this.$route.params.page)
-      if (isNaN(this.pageParam)) {
-        this.pageParam = 1
-      }
-
-      this.page = this.pageParam
-
       // TODO : Load links
       // Temp
     }
