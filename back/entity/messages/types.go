@@ -7,8 +7,9 @@ type AdminUser struct {
 }
 
 type Link struct {
-	ID  uint   `json:"id"`
-	URL string `json:"url"`
+	ID      uint   `json:"id"`
+	ShortID string `json:"short_id"`
+	URL     string `json:"url"`
 }
 
 type AccessToken struct {

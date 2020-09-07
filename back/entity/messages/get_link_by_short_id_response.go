@@ -13,8 +13,9 @@ type GetLinkByShortIDResponse struct {
 
 func NewGetLinkByShortIDResponse(link *entity.Link) (resp *GetLinkByShortIDResponse) {
 	resLink := Link{
-		ID:  link.ID,
-		URL: link.URL,
+		ID:      link.ID,
+		ShortID: link.GetShortID(),
+		URL:     link.URL,
 	}
 
 	return &GetLinkByShortIDResponse{

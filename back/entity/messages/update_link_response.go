@@ -13,8 +13,9 @@ type UpdateLinkResponse struct {
 
 func NewUpdateLinkResponse(link *entity.Link) (resp *UpdateLinkResponse) {
 	resLink := Link{
-		ID:  link.ID,
-		URL: link.URL,
+		ID:      link.ID,
+		ShortID: link.GetShortID(),
+		URL:     link.URL,
 	}
 
 	return &UpdateLinkResponse{

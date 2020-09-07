@@ -13,8 +13,9 @@ type CreateLinkResponse struct {
 
 func NewCreateLinkResponse(link *entity.Link) (resp *CreateLinkResponse) {
 	resLink := Link{
-		ID:  link.ID,
-		URL: link.URL,
+		ID:      link.ID,
+		ShortID: link.GetShortID(),
+		URL:     link.URL,
 	}
 
 	return &CreateLinkResponse{
