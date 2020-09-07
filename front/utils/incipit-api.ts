@@ -44,9 +44,7 @@ class IncipitApi {
       url.href,
       {
         method: 'GET',
-        body: JSON.stringify({}),
         headers: {
-          'Content-Type': 'application/json',
           authorization: 'Bearer ' + TokenStore.accessToken
         }
       }
