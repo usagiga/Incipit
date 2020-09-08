@@ -74,8 +74,6 @@ export default class Login extends Vue {
       IncipitApi(this.$router)
         .login(this.userName, this.password)
         .then((resJson: any) => {
-          if (resJson?.type !== 'login_admin') { return }
-
           // Set token pair
           TokenStore.accessToken = resJson?.access_token?.token
           TokenStore.refreshToken = resJson?.refresh_token?.token

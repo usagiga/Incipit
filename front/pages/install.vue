@@ -74,10 +74,6 @@ export default class Install extends Vue {
       IncipitApi(this.$router)
         .install(this.userName, this.userName, this.password)
         .then((resJson: any) => {
-          if (resJson?.type !== 'install') {
-            return
-          }
-
           // Set token pair
           TokenStore.accessToken = resJson?.access_token?.token
           TokenStore.refreshToken = resJson?.refresh_token?.token
