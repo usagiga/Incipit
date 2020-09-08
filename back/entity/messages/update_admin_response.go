@@ -15,7 +15,7 @@ func NewUpdateAdminResponse(user *entity.AdminUser) (resp *UpdateAdminResponse) 
 	resUser := AdminUser{
 		ID:         user.ID,
 		Name:       user.Name,
-		ScreenName: user.Password,
+		ScreenName: user.ScreenName,
 	}
 
 	return &UpdateAdminResponse{

@@ -18,7 +18,7 @@ func NewGetAdminResponse(users []entity.AdminUser) (resp Response) {
 		resUser := AdminUser{
 			ID:         user.ID,
 			Name:       user.Name,
-			ScreenName: user.Password,
+			ScreenName: user.ScreenName,
 		}
 
 		resUsers[i] = resUser

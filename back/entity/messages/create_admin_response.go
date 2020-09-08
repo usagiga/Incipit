@@ -15,7 +15,7 @@ func NewCreateAdminResponse(user *entity.AdminUser) (resp *CreateAdminResponse) 
 	resUser := AdminUser{
 		ID:         user.ID,
 		Name:       user.Name,
-		ScreenName: user.Password,
+		ScreenName: user.ScreenName,
 	}
 
 	return &CreateAdminResponse{
