@@ -109,7 +109,12 @@
           Add Link
         </v-card-title>
         <v-card-text>
-          <v-form ref="addLinkForm" v-model="addLinkForm.isValidFormValue">
+          <!--suppress HtmlUnknownBooleanAttribute -->
+          <v-form
+            ref="addLinkForm"
+            v-model="addLinkForm.isValidFormValue"
+            @submit.prevent
+          >
             <v-text-field
               v-model="addLinkForm.addUrl"
               label="URL"
@@ -119,6 +124,7 @@
               clearable
             />
             <v-btn
+              type="submit"
               :disabled="!addLinkForm.isValidFormValue"
               :loading="addLinkForm.isCreateQueued"
               @click="addLinkForm.addLink()"
@@ -126,6 +132,7 @@
               Add
             </v-btn>
             <v-btn
+              type="cancel"
               :disabled="addLinkForm.isCreateQueued"
               @click="addLinkForm.closeDialog()"
             >
@@ -135,6 +142,11 @@
         </v-card-text>
       </v-card>
     </v-dialog>
+
+    <!-- Loading indicator -->
+    <v-overlay :value="isGetQueued">
+      <v-progress-circular indeterminate size="64" />
+    </v-overlay>
   </div>
 </template>
 
@@ -142,8 +154,9 @@
 /* eslint-disable camelcase,no-console */
 
 import { Vue, Component } from 'nuxt-property-decorator'
-import { sleep } from '~/utils/sleep'
+import { VueRouter } from 'vue-router/types/router'
 import { VForm } from '~/types/v-form'
+import IncipitApi from '~/utils/incipit-api'
 
 /**
    * An item of link list
@@ -178,6 +191,7 @@ class AddLinkForm {
     ]
 
     $refs: { [key: string]: Vue | Element | Vue[] | Element[] }
+    $router: VueRouter | undefined
 
     get formRef (): VForm {
       return this.$refs.addLinkForm as any
@@ -203,13 +217,20 @@ class AddLinkForm {
         return
       }
 
+      if (this.$router === undefined) {
+        throw new Error('add link form\'s $router is undefined')
+      }
+
       this.isCreateQueued = true
 
-      sleep(5000)
+      // Add link through API
+      IncipitApi(this.$router)
+        .createLink(this.addUrl)
         .then(() => {
-          this.closeDialog()
+          // Reload this page
+          location.reload()
         })
-        .catch((err) => {
+        .catch((err: any) => {
           console.error(err)
         }).finally(() => {
           this.isCreateQueued = false
@@ -220,12 +241,9 @@ class AddLinkForm {
   @Component
 export default class LinkList extends Vue {
     addLinkForm: AddLinkForm = new AddLinkForm(this.$refs)
+    linkItems: LinkItem[] = []
 
-    linkItems: LinkItem[] = [
-      new LinkItem(1, 'Test A', 'https://example.com/'),
-      new LinkItem(2, 'Test B', 'https://example.com/'),
-      new LinkItem(3, 'Test C', 'https://example.com/')
-    ]
+    isGetQueued: boolean = true
 
     showAddLinkDialog () {
       this.addLinkForm.openDialog()
@@ -241,13 +259,14 @@ export default class LinkList extends Vue {
     submitEditLink (linkItem: LinkItem) {
       linkItem.isUpdateQueued = true
 
-      // TODO : Update link through API
-      sleep(5000)
+      // Update link through API
+      IncipitApi(this.$router)
+        .updateLink(linkItem.id, linkItem.editingUrl)
         .then(() => {
           linkItem.actualUrl = linkItem.editingUrl
           linkItem.isEditing = false
         })
-        .catch((err) => {
+        .catch((err: any) => {
           console.error(err)
         }).finally(() => {
           linkItem.isUpdateQueued = false
@@ -262,13 +281,13 @@ export default class LinkList extends Vue {
     deleteLink (linkItem: LinkItem, index: number) {
       linkItem.isDeleteQueued = true
 
-      // TODO : Delete link through API
-      sleep(5000)
+      // Delete link through API
+      IncipitApi(this.$router)
+        .deleteLink(linkItem.id)
         .then(() => {
           this.linkItems.splice(index, 1)
-          linkItem.isEditing = false
         })
-        .catch((err) => {
+        .catch((err: any) => {
           console.error(err)
         }).finally(() => {
           linkItem.isDeleteQueued = false
@@ -277,8 +296,31 @@ export default class LinkList extends Vue {
 
     // noinspection JSUnusedGlobalSymbols
     mounted () {
+      // Initialize add link form's router
+      this.addLinkForm.$router = this.$router
+
       // Load links
-      // TODO : Load links here
+      this.isGetQueued = true
+      IncipitApi(this.$router)
+        .getLinks()
+        .then((resJson: any) => {
+          // Set token pair
+          const resLinks = resJson?.links
+          resLinks.forEach((resLink: any) => {
+            return this.linkItems.push(
+              new LinkItem(
+                resLink?.id,
+                resLink?.short_id,
+                resLink?.url
+              )
+            )
+          })
+        })
+        .catch((err: any) => {
+          console.error(err)
+        }).finally(() => {
+          this.isGetQueued = false
+        })
     }
 
     head () {
