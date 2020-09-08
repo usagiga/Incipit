@@ -1,102 +1,97 @@
 <template>
   <div>
     <!-- Link list -->
-    <v-list class="link-list">
+    <v-simple-table class="link-list">
       <!-- Header -->
-      <v-list-item>
-        <v-list-item-content>
-          <v-list-item-title>
-            ID
-          </v-list-item-title>
-        </v-list-item-content>
-        <v-list-item-content>
-          <v-list-item-title>
-            Actual URL
-          </v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Actual URL</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
 
-      <!-- If there's no item -->
-      <v-list-item v-if="linkItems.length === 0">
-        <v-list-item-content>
-          <v-list-item-title>
-            There's no item.
-          </v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
+      <tbody>
+        <!-- If there's no item -->
+        <tr v-if="linkItems.length === 0">
+          <td>There's no item.</td>
+        </tr>
 
-      <!-- If there are items -->
-      <v-list-item
-        v-for="(item, index) in linkItems"
-        :key="item.title"
-      >
-        <v-list-item-content>
-          <v-list-item-title v-show="!item.isEditing" v-text="item.id" />
-          <v-list-item-title v-show="item.isEditing" v-text="item.id" />
-        </v-list-item-content>
+        <!-- If there are items -->
+        <tr
+          v-for="(item, index) in linkItems"
+          :key="item.title"
+        >
+          <td>
+            <v-list-item-title v-show="!item.isEditing" v-text="item.id" />
+            <v-list-item-title v-show="item.isEditing" v-text="item.id" />
+          </td>
 
-        <v-list-item-content>
-          <v-list-item-subtitle v-show="!item.isEditing" v-text="item.actualUrl" />
-          <v-text-field v-show="item.isEditing" v-model="item.editingUrl" placeholder="Actual URL" />
-        </v-list-item-content>
+          <td>
+            <v-list-item-subtitle v-show="!item.isEditing" v-text="item.actualUrl" />
+            <v-text-field v-show="item.isEditing" v-model="item.editingUrl" placeholder="Actual URL" />
+          </td>
 
-        <v-list-item-action class="flex-row">
-          <v-btn
-            v-show="!item.isEditing"
-            :disabled="item.isDeleteQueued"
-            icon
-            @click="editLink(item)"
-          >
-            <v-icon color="grey lighten-1">
-              mdi-pencil
-            </v-icon>
-          </v-btn>
-          <v-btn
-            v-show="!item.isEditing"
-            :loading="item.isDeleteQueued"
-            :disabled="item.isDeleteQueued"
-            icon
-            @click="deleteLink(item, index)"
-          >
-            <v-icon color="grey lighten-1">
-              mdi-delete
-            </v-icon>
-          </v-btn>
-          <v-btn
-            v-show="item.isEditing"
-            :loading="item.isUpdateQueued"
-            :disabled="item.isUpdateQueued"
-            icon
-            @click="submitEditLink(item)"
-          >
-            <v-icon color="grey lighten-1">
-              mdi-checkbox-marked-circle-outline
-            </v-icon>
-          </v-btn>
-          <v-btn
-            v-show="item.isEditing"
-            :disabled="item.isUpdateQueued"
-            icon
-            @click="cancelEditLink(item)"
-          >
-            <v-icon color="grey lighten-1">
-              mdi-close-circle-outline
-            </v-icon>
-          </v-btn>
-        </v-list-item-action>
-      </v-list-item>
+          <td>
+            <v-btn
+              v-show="!item.isEditing"
+              :disabled="item.isDeleteQueued"
+              icon
+              @click="editLink(item)"
+            >
+              <v-icon color="grey lighten-1">
+                mdi-pencil
+              </v-icon>
+            </v-btn>
+            <v-btn
+              v-show="!item.isEditing"
+              :loading="item.isDeleteQueued"
+              :disabled="item.isDeleteQueued"
+              icon
+              @click="deleteLink(item, index)"
+            >
+              <v-icon color="grey lighten-1">
+                mdi-delete
+              </v-icon>
+            </v-btn>
+            <v-btn
+              v-show="item.isEditing"
+              :loading="item.isUpdateQueued"
+              :disabled="item.isUpdateQueued"
+              icon
+              @click="submitEditLink(item)"
+            >
+              <v-icon color="grey lighten-1">
+                mdi-checkbox-marked-circle-outline
+              </v-icon>
+            </v-btn>
+            <v-btn
+              v-show="item.isEditing"
+              :disabled="item.isUpdateQueued"
+              icon
+              @click="cancelEditLink(item)"
+            >
+              <v-icon color="grey lighten-1">
+                mdi-close-circle-outline
+              </v-icon>
+            </v-btn>
+          </td>
+        </tr>
+      </tbody>
 
       <!-- Add Button -->
-      <v-list-item class="justify-center">
-        <v-list-item-action class="link-list-wide-container">
-          <v-btn :block="true" @click.stop="showAddLinkDialog()">
-            <v-icon color="grey lighten-1">
-              mdi-plus
-            </v-icon>
-          </v-btn>
-        </v-list-item-action>
-      </v-list-item>
-    </v-list>
+      <tfoot>
+        <tr>
+          <th colspan="3">
+            <v-btn :block="true" @click.stop="showAddLinkDialog()">
+              <v-icon color="grey lighten-1">
+                mdi-plus
+              </v-icon>
+            </v-btn>
+          </th>
+        </tr>
+      </tfoot>
+    </v-simple-table>
 
     <!-- Add dialog -->
     <v-dialog
@@ -332,9 +327,5 @@ export default class LinkList extends Vue {
 </script>
 
 <style lang="scss">
-  .link-list {
-    .link-list-wide-container {
-      width: 80%;
-    }
-  }
+
 </style>
