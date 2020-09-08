@@ -81,9 +81,6 @@ export default class Login extends Vue {
           // Redirect
           this.$router.push('/link')
         })
-        .catch((err: any) => {
-          console.error(err)
-        })
     }
 
     head () {

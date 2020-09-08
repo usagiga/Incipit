@@ -219,9 +219,7 @@ class AddAdminForm {
           // Reload this page
           location.reload()
         })
-        .catch((err: any) => {
-          console.error(err)
-        }).finally(() => {
+        .finally(() => {
           this.isCreateQueued = false
         })
     }
@@ -247,9 +245,7 @@ export default class AdminList extends Vue {
         .then(() => {
           this.adminItems.splice(index, 1)
         })
-        .catch((err: any) => {
-          console.error(err)
-        }).finally(() => {
+        .finally(() => {
           adminItem.isDeleteQueued = false
         })
     }
@@ -276,9 +272,7 @@ export default class AdminList extends Vue {
             )
           })
         })
-        .catch((err: any) => {
-          console.error(err)
-        }).finally(() => {
+        .finally(() => {
           this.isGetQueued = false
         })
     }

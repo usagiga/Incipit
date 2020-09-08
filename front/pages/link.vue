@@ -243,9 +243,7 @@ class AddLinkForm {
           // Reload this page
           location.reload()
         })
-        .catch((err: any) => {
-          console.error(err)
-        }).finally(() => {
+        .finally(() => {
           this.isCreateQueued = false
         })
     }
@@ -300,9 +298,7 @@ export default class LinkList extends Vue {
           linkItem.actualUrl = linkItem.editingUrl
           linkItem.isEditing = false
         })
-        .catch((err: any) => {
-          console.error(err)
-        }).finally(() => {
+        .finally(() => {
           linkItem.isUpdateQueued = false
         })
     }
@@ -321,9 +317,7 @@ export default class LinkList extends Vue {
         .then(() => {
           this.linkItems.splice(index, 1)
         })
-        .catch((err: any) => {
-          console.error(err)
-        }).finally(() => {
+        .finally(() => {
           linkItem.isDeleteQueued = false
         })
     }
@@ -350,9 +344,7 @@ export default class LinkList extends Vue {
             )
           })
         })
-        .catch((err: any) => {
-          console.error(err)
-        }).finally(() => {
+        .finally(() => {
           this.isGetQueued = false
         })
     }

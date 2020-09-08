@@ -3,6 +3,7 @@
 
 import { VueRouter } from 'vue-router/types/router'
 import TokenStore from './token-store'
+import ErrorParser from './error-parser'
 
 /**
  * IncipitApi provides functions to treat Incipit API
@@ -22,11 +23,11 @@ class IncipitApi {
 
   /**
    * Get its instance as singleton
-   * @param router VueRouter to redirect when authorizing
+   * @param $router VueRouter to redirect when authorizing
    */
-  static getInstance (router: VueRouter): IncipitApi {
+  static getInstance ($router: VueRouter): IncipitApi {
     if (this.instance === undefined || this.instance == null) {
-      this.instance = new IncipitApi(router)
+      this.instance = new IncipitApi($router)
     }
 
     return this.instance
@@ -59,6 +60,7 @@ class IncipitApi {
       .then(res => res.json())
       .then(resJson => this.interceptInstall(resJson))
       .then(resJson => this.interceptAuthorize(resJson, () => this.getLinks()))
+      .then(resJson => ErrorParser().interceptErrorResp(resJson))
       .then(resJson => this.interceptInvalidType(resJson, 'create_link'))
   }
 
@@ -81,6 +83,7 @@ class IncipitApi {
       .then(res => res.json())
       .then(resJson => this.interceptInstall(resJson))
       .then(resJson => this.interceptAuthorize(resJson, () => this.getLinks()))
+      .then(resJson => ErrorParser().interceptErrorResp(resJson))
       .then(resJson => this.interceptInvalidType(resJson, 'get_link'))
   }
 
@@ -106,6 +109,7 @@ class IncipitApi {
     return fetch(req)
       .then(res => res.json())
       .then(resJson => this.interceptInstall(resJson))
+      .then(resJson => ErrorParser().interceptErrorResp(resJson))
       .then(resJson => this.interceptInvalidType(resJson, 'get_link_by_short_id'))
   }
 
@@ -135,6 +139,7 @@ class IncipitApi {
       .then(res => res.json())
       .then(resJson => this.interceptInstall(resJson))
       .then(resJson => this.interceptAuthorize(resJson, () => this.getLinks()))
+      .then(resJson => ErrorParser().interceptErrorResp(resJson))
       .then(resJson => this.interceptInvalidType(resJson, 'update_link'))
   }
 
@@ -162,6 +167,7 @@ class IncipitApi {
       .then(res => res.json())
       .then(resJson => this.interceptInstall(resJson))
       .then(resJson => this.interceptAuthorize(resJson, () => this.getLinks()))
+      .then(resJson => ErrorParser().interceptErrorResp(resJson))
       .then(resJson => this.interceptInvalidType(resJson, 'delete_link'))
   }
 
@@ -197,6 +203,7 @@ class IncipitApi {
       .then(res => res.json())
       .then(resJson => this.interceptInstall(resJson))
       .then(resJson => this.interceptAuthorize(resJson, () => this.getAdmins()))
+      .then(resJson => ErrorParser().interceptErrorResp(resJson))
       .then(resJson => this.interceptInvalidType(resJson, 'create_admin'))
   }
 
@@ -219,6 +226,7 @@ class IncipitApi {
       .then(res => res.json())
       .then(resJson => this.interceptInstall(resJson))
       .then(resJson => this.interceptAuthorize(resJson, () => this.getAdmins()))
+      .then(resJson => ErrorParser().interceptErrorResp(resJson))
       .then(resJson => this.interceptInvalidType(resJson, 'get_admin'))
   }
 
@@ -246,6 +254,7 @@ class IncipitApi {
       .then(res => res.json())
       .then(resJson => this.interceptInstall(resJson))
       .then(resJson => this.interceptAuthorize(resJson, () => this.getAdmins()))
+      .then(resJson => ErrorParser().interceptErrorResp(resJson))
       .then(resJson => this.interceptInvalidType(resJson, 'delete_admin'))
   }
 
@@ -276,6 +285,7 @@ class IncipitApi {
     return fetch(req)
       .then(res => res.json())
       .then(resJson => this.interceptInstalled(resJson))
+      .then(resJson => ErrorParser().interceptErrorResp(resJson))
       .then(resJson => this.interceptInvalidType(resJson, 'install'))
   }
 
@@ -304,6 +314,7 @@ class IncipitApi {
     return fetch(req)
       .then(res => res.json())
       .then(resJson => this.interceptInstall(resJson))
+      .then(resJson => ErrorParser().interceptErrorResp(resJson))
       .then(resJson => this.interceptInvalidType(resJson, 'login_admin'))
   }
 
@@ -328,6 +339,7 @@ class IncipitApi {
     return fetch(req)
       .then(res => res.json())
       .then(resJson => this.interceptInstall(resJson))
+      .then(resJson => ErrorParser().interceptErrorResp(resJson))
       .then(resJson => this.interceptInvalidType(resJson, 'refresh_token_admin'))
       .then((resJson) => {
         TokenStore.accessToken = resJson.access_token.token
@@ -377,6 +389,7 @@ class IncipitApi {
     // Renew access token
     if (resJson?.p_code === 202 && resJson?.s_code === 103) {
       return this.renewToken()
+        .then(resJson => ErrorParser().interceptErrorResp(resJson))
         .then(retryFunc)
         .catch(
           () => this.$router.push('/login')
@@ -404,6 +417,6 @@ class IncipitApi {
 
 /**
  * Get IncipitApi instance as singleton
- * @param router
+ * @param $router VueRouter
  */
-export default (router: VueRouter) => IncipitApi.getInstance(router)
+export default ($router: VueRouter) => IncipitApi.getInstance($router)
