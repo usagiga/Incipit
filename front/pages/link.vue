@@ -6,6 +6,7 @@
       <thead>
         <tr>
           <th>ID</th>
+          <th>Short ID</th>
           <th>Actual URL</th>
           <th>Actions</th>
         </tr>
@@ -14,7 +15,9 @@
       <tbody>
         <!-- If there's no item -->
         <tr v-if="linkItems.length === 0">
-          <td>There's no item.</td>
+          <td colspan="4">
+            There's no item.
+          </td>
         </tr>
 
         <!-- If there are items -->
@@ -23,8 +26,15 @@
           :key="item.title"
         >
           <td>
-            <v-list-item-title v-show="!item.isEditing" v-text="item.id" />
-            <v-list-item-title v-show="item.isEditing" v-text="item.id" />
+            <v-list-item-title>
+              {{ item.id }}
+            </v-list-item-title>
+          </td>
+
+          <td>
+            <v-list-item-title>
+              {{ item.shortId }}
+            </v-list-item-title>
           </td>
 
           <td>
@@ -33,6 +43,16 @@
           </td>
 
           <td>
+            <v-btn
+              v-show="!item.isEditing"
+              :disabled="item.isDeleteQueued"
+              icon
+              @click="copyLink(item)"
+            >
+              <v-icon color="grey lighten-1">
+                mdi-content-copy
+              </v-icon>
+            </v-btn>
             <v-btn
               v-show="!item.isEditing"
               :disabled="item.isDeleteQueued"
@@ -82,7 +102,7 @@
       <!-- Add Button -->
       <tfoot>
         <tr>
-          <th colspan="3">
+          <th colspan="4">
             <v-btn :block="true" @click.stop="showAddLinkDialog()">
               <v-icon color="grey lighten-1">
                 mdi-plus
@@ -146,7 +166,7 @@
 </template>
 
 <script lang="ts">
-/* eslint-disable camelcase,no-console */
+/* eslint-disable camelcase,no-console,no-unused-expressions */
 
 import { Vue, Component } from 'nuxt-property-decorator'
 import { VueRouter } from 'vue-router/types/router'
@@ -242,6 +262,27 @@ export default class LinkList extends Vue {
 
     showAddLinkDialog () {
       this.addLinkForm.openDialog()
+    }
+
+    copyLink (linkItem: LinkItem) {
+      // Make invisible tag
+      const copyingTag = document.createElement('p')
+      copyingTag.textContent = `${window.location.origin}/x/${linkItem.shortId}`
+      document.body.appendChild(copyingTag)
+
+      // Select copying tag
+      const range = document.createRange()
+      const selection = window.getSelection()
+      range.selectNodeContents(copyingTag)
+      selection?.removeAllRanges()
+      selection?.addRange(range)
+
+      // Copy
+      document.execCommand('copy')
+
+      // Finalize
+      selection?.removeAllRanges()
+      document.body.removeChild(copyingTag)
     }
 
     editLink (linkItem: LinkItem) {
