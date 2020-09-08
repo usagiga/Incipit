@@ -382,7 +382,15 @@ class IncipitApi {
       return resJson
     }
 
-    // Renew access token
+    // Need login
+    if (
+      (resJson?.p_code === 302 && resJson?.s_code === 102) || // No auth header
+      (resJson?.p_code === 202 && resJson?.s_code === 101) // No such user
+    ) {
+      return this.$router.push('/login')
+    }
+
+    // Need renew access token
     if (resJson?.p_code === 202 && resJson?.s_code === 103) {
       return this.renewToken()
         .then(resJson => ErrorParser().interceptErrorResp(resJson))
