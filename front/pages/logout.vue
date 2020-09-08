@@ -20,17 +20,17 @@
 /* eslint-disable no-console */
 
 import { Vue, Component } from 'nuxt-property-decorator'
-import { sleep } from '~/utils/sleep'
+import TokenStore from '~/utils/token-store'
 
   @Component({
     layout: 'blank'
   })
 export default class Login extends Vue {
   mounted () {
-    // Temp
-    sleep(5000)
-      .then(() => this.$router.push('/'))
-      .catch(err => console.error(err))
+    TokenStore.accessToken = ''
+    TokenStore.refreshToken = ''
+
+    this.$router.push('/')
   }
 
   head () {
