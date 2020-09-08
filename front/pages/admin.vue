@@ -260,7 +260,6 @@ export default class AdminList extends Vue {
       IncipitApi(this.$router)
         .getAdmins()
         .then((resJson: any) => {
-          // Set token pair
           const resAdmins = resJson?.admin_users
           resAdmins.forEach((resAdmin: any) => {
             return this.adminItems.push(

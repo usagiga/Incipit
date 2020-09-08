@@ -25,21 +25,14 @@
           v-for="(item, index) in linkItems"
           :key="item.title"
         >
-          <td>
-            {{ item.id }}
-          </td>
-
-          <td>
-            {{ item.shortId }}
-          </td>
-
+          <td>{{ item.id }}</td>
+          <td>{{ item.shortId }}</td>
           <td>
             <span v-show="!item.isEditing">
               {{ item.actualUrl }}
             </span>
             <v-text-field v-show="item.isEditing" v-model="item.editingUrl" placeholder="Actual URL" />
           </td>
-
           <td>
             <v-btn
               v-show="!item.isEditing"
@@ -332,7 +325,6 @@ export default class LinkList extends Vue {
       IncipitApi(this.$router)
         .getLinks()
         .then((resJson: any) => {
-          // Set token pair
           const resLinks = resJson?.links
           resLinks.forEach((resLink: any) => {
             return this.linkItems.push(
