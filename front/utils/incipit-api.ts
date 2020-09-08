@@ -220,7 +220,7 @@ class IncipitApi {
     return fetch(req)
       .then(res => res.json())
       .then(resJson => this.interceptInstall(resJson))
-      .then(resJson => this.interceptInvalidType(resJson, 'login'))
+      .then(resJson => this.interceptInvalidType(resJson, 'login_admin'))
   }
 
   /**
