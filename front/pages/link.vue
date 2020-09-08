@@ -26,19 +26,17 @@
           :key="item.title"
         >
           <td>
-            <v-list-item-title>
-              {{ item.id }}
-            </v-list-item-title>
+            {{ item.id }}
           </td>
 
           <td>
-            <v-list-item-title>
-              {{ item.shortId }}
-            </v-list-item-title>
+            {{ item.shortId }}
           </td>
 
           <td>
-            <v-list-item-subtitle v-show="!item.isEditing" v-text="item.actualUrl" />
+            <span v-show="!item.isEditing">
+              {{ item.actualUrl }}
+            </span>
             <v-text-field v-show="item.isEditing" v-model="item.editingUrl" placeholder="Actual URL" />
           </td>
 
