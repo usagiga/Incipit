@@ -5,6 +5,19 @@ class TokenStore {
   private _accessTokenKey: string = 'incipit_access_token'
   private _refreshTokenKey: string = 'incipit_refresh_token'
 
+  static instance: TokenStore
+
+  /**
+   * Get its instance as singleton
+   */
+  static getInstance (): TokenStore {
+    if (this.instance === undefined || this.instance == null) {
+      this.instance = new TokenStore()
+    }
+
+    return this.instance
+  }
+
   /**
    * Get access token from local storage.
    * If there's no token, return empty string.
@@ -47,4 +60,4 @@ class TokenStore {
 }
 
 // Export
-export default new TokenStore()
+export default TokenStore.getInstance()
