@@ -24,7 +24,7 @@ const (
 	AdminUserHandler PrimaryErrorCode = 301
 	AdminAuthHandler PrimaryErrorCode = 302
 	LinkHandler      PrimaryErrorCode = 303
-	InstallerHandler      PrimaryErrorCode = 304
+	InstallerHandler PrimaryErrorCode = 304
 )
 
 type SecondaryErrorCode int
@@ -85,7 +85,8 @@ const (
 	AdminUserHandler_FailedBindJson SecondaryErrorCode = 101
 
 	// AdminAuthHandler
-	AdminAuthHandler_FailedBindJson SecondaryErrorCode = 101
+	AdminAuthHandler_FailedBindJson          SecondaryErrorCode = 101
+	AdminAuthHandler_NeedAuthorizationHeader SecondaryErrorCode = 102
 
 	// LinkHandler
 	LinkHandler_FailedBindQuery SecondaryErrorCode = 101

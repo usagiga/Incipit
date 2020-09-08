@@ -62,6 +62,12 @@ func (resp *ErrorResponse) GetHTTPStatusCode() int {
 		return http.StatusBadRequest
 	}
 
+	// Lack header
+	if interr.PrimaryErrorCode(resp.PrimaryErrorCode) == interr.AdminAuthHandler &&
+		interr.SecondaryErrorCode(resp.SecondaryErrorCode) == interr.AdminAuthHandler_NeedAuthorizationHeader {
+		return http.StatusUnauthorized
+	}
+
 
 	return http.StatusInternalServerError
 }

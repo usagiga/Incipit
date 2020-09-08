@@ -63,7 +63,8 @@ class ErrorParser {
     ])],
     // 302 Handle request of Authorization (Admin)
     [302, new Map([
-      [101, '302-101 Failed to bind JSON. Request body is not JSON or invalid.']
+      [101, '302-101 Failed to bind JSON. Request body is not JSON or invalid.'],
+      [102, '302-102 Need Authorization Header.']
     ])],
     // 303 Handle request of Link
     [303, new Map([
@@ -78,7 +79,7 @@ class ErrorParser {
   /**
    * Get its instance as singleton
    */
-  static getInstance (): ErrorParser {
+  static getInstance(): ErrorParser {
     if (this.instance === undefined || this.instance == null) {
       this.instance = new ErrorParser()
     }
@@ -91,7 +92,7 @@ class ErrorParser {
    * @param pCode Primary Code
    * @param sCode Secondary Code
    */
-  getErrorMessage (pCode: number, sCode: number): string {
+  getErrorMessage(pCode: number, sCode: number): string {
     const region = ErrorParser.errorMap.get(pCode)
     const errMsg = region?.get(sCode)
 
@@ -103,7 +104,7 @@ class ErrorParser {
    * @param resJson JSON on intercepting response
    * @return Promise<response JSON>
    */
-  interceptErrorResp (resJson: any): Promise<any> {
+  interceptErrorResp(resJson: any): Promise<any> {
     if (resJson?.type !== 'error') {
       return resJson
     }

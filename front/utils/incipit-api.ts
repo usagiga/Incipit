@@ -92,17 +92,13 @@ class IncipitApi {
    * @param shortId short ID of link
    */
   getLinkByShortID (shortId: string): Promise<any> {
-    const url = new URL('link', this.apiBaseUrl)
-    const reqBody = { shortId }
+    const url = new URL('link/shortened', this.apiBaseUrl)
+    url.searchParams.append('short_id', shortId)
+
     const req = new Request(
       url.href,
       {
-        method: 'GET',
-        body: JSON.stringify(reqBody),
-        headers: {
-          'Content-Type': 'application/json',
-          authorization: 'Bearer ' + TokenStore.accessToken
-        }
+        method: 'GET'
       }
     )
 

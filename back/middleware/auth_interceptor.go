@@ -2,9 +2,9 @@ package middleware
 
 import (
 	"github.com/gin-gonic/gin"
+	interr "github.com/usagiga/Incipit/back/entity/errors"
 	"github.com/usagiga/Incipit/back/entity/messages"
 	"github.com/usagiga/Incipit/back/model"
-	"net/http"
 	"strings"
 )
 
@@ -20,7 +20,17 @@ func (i *AuthInterceptorImpl) Handle(c *gin.Context) {
 	authHeader := c.GetHeader("Authorization")
 	splitHeader := strings.Split(authHeader, "Bearer ")
 	if len(splitHeader) != 2 {
-		c.AbortWithStatusJSON(http.StatusUnauthorized, "{}")
+		err := interr.NewDistinctError(
+			"There's no authorization header",
+			interr.AdminAuthHandler,
+			interr.AdminAuthHandler_NeedAuthorizationHeader,
+			nil,
+		)
+
+		resp := messages.NewErrorResponse(err)
+		sCode := resp.GetHTTPStatusCode()
+
+		c.AbortWithStatusJSON(sCode, resp)
 		return
 	}
 	accToken := splitHeader[1]

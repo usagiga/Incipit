@@ -94,6 +94,7 @@ None yet.
 ### 302 Handle request of Authorization(Admin)
 
 - 101 Failed to bind JSON. Request body is not JSON or invalid.
+- 102 Need Authorization Header.
 
 ### 303 Handle request of Link
 
