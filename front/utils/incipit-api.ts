@@ -166,6 +166,90 @@ class IncipitApi {
   }
 
   /**
+   * Create admin
+   * @param creatingName creating admin name
+   * @param creatingScreenName creating admin screen name
+   * @param creatingPassword creating admin password
+   */
+  createAdmin (
+    creatingName: string,
+    creatingScreenName: string,
+    creatingPassword: string
+  ): Promise<any> {
+    const url = new URL('admin', this.apiBaseUrl)
+    const reqBody = {
+      name: creatingName,
+      screen_name: creatingScreenName,
+      password: creatingPassword
+    }
+    const req = new Request(
+      url.href,
+      {
+        method: 'POST',
+        body: JSON.stringify(reqBody),
+        headers: {
+          authorization: 'Bearer ' + TokenStore.accessToken
+        }
+      }
+    )
+
+    return fetch(req)
+      .then(res => res.json())
+      .then(resJson => this.interceptInstall(resJson))
+      .then(resJson => this.interceptAuthorize(resJson, () => this.getAdmins()))
+      .then(resJson => this.interceptInvalidType(resJson, 'create_admin'))
+  }
+
+  /**
+   * Get all admins
+   */
+  getAdmins (): Promise<any> {
+    const url = new URL('admin', this.apiBaseUrl)
+    const req = new Request(
+      url.href,
+      {
+        method: 'GET',
+        headers: {
+          authorization: 'Bearer ' + TokenStore.accessToken
+        }
+      }
+    )
+
+    return fetch(req)
+      .then(res => res.json())
+      .then(resJson => this.interceptInstall(resJson))
+      .then(resJson => this.interceptAuthorize(resJson, () => this.getAdmins()))
+      .then(resJson => this.interceptInvalidType(resJson, 'get_admin'))
+  }
+
+  /**
+   * Delete admin
+   * @param id deleting ID
+   */
+  deleteAdmin (id: number): Promise<any> {
+    const url = new URL('admin', this.apiBaseUrl)
+    const reqBody = {
+      id: id
+    }
+    const req = new Request(
+      url.href,
+      {
+        method: 'DELETE',
+        body: JSON.stringify(reqBody),
+        headers: {
+          authorization: 'Bearer ' + TokenStore.accessToken
+        }
+      }
+    )
+
+    return fetch(req)
+      .then(res => res.json())
+      .then(resJson => this.interceptInstall(resJson))
+      .then(resJson => this.interceptAuthorize(resJson, () => this.getAdmins()))
+      .then(resJson => this.interceptInvalidType(resJson, 'delete_admin'))
+  }
+
+  /**
    * Register first administrator to set up
    * @param name Name of administrator
    * @param screenName Screen name of administrator
