@@ -1,5 +1,7 @@
+// noinspection NpmUsedModulesInstalled
 import colors from 'vuetify/es5/util/colors'
 
+// noinspection JSUnresolvedVariable
 export default {
   mode: 'universal',
   /*
@@ -30,13 +32,11 @@ export default {
   /*
   ** Global CSS
   */
-  css: [
-  ],
+  css: [],
   /*
   ** Plugins to load before mounting the App
   */
-  plugins: [
-  ],
+  plugins: [],
   /*
   ** Nuxt.js dev-modules
   */
@@ -47,8 +47,7 @@ export default {
   /*
   ** Nuxt.js modules
   */
-  modules: [
-  ],
+  modules: [],
   /*
   ** vuetify module configuration
   ** https://github.com/nuxt-community/vuetify-module
@@ -77,8 +76,6 @@ export default {
     /*
     ** You can extend webpack config here
     */
-    // extend (config, ctx) {
-    // }
   },
   /*
   ** Port configuration
