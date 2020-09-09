@@ -71,8 +71,8 @@ func TestAdminModelImpl_Add(t *testing.T) {
 	}{
 		{
 			IsExpectedError: false,
-			TestingValue:    &entity.AdminUser{Name: "user_1", ScreenName: "screen_1", Password: "password_1"},
-			ExpectingValue:  &entity.AdminUser{Name: "user_1", ScreenName: "screen_1", Password: "hashed_password_1", Model: gorm.Model{ID: 4}},
+			TestingValue:    &entity.AdminUser{Name: "new_user_1", ScreenName: "screen_1", Password: "password_1"},
+			ExpectingValue:  &entity.AdminUser{Name: "new_user_1", ScreenName: "screen_1", Password: "hashed_password_1", Model: gorm.Model{ID: 4}},
 		},
 	}
 
