@@ -83,6 +83,11 @@ export default class Login extends Vue {
         })
     }
 
+    // noinspection JSUnusedGlobalSymbols
+    mounted () {
+      IncipitApi(this.$router).isInstalled()
+    }
+
     head () {
       return {
         title: 'Login'

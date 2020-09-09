@@ -286,6 +286,25 @@ class IncipitApi {
   }
 
   /**
+   * Get is logged in or not
+   */
+  isInstalled (): Promise<any> {
+    const url = new URL('install', this.apiBaseUrl)
+    const req = new Request(
+      url.href,
+      {
+        method: 'GET'
+      }
+    )
+
+    return fetch(req)
+      .then(res => res.json())
+      .then(resJson => this.interceptInstall(resJson))
+      .then(resJson => ErrorParser().interceptErrorResp(resJson))
+      .then(resJson => this.interceptInvalidType(resJson, 'is_installed'))
+  }
+
+  /**
    * Login as administrator
    * @param name Name of administrator
    * @param password Password of administrator
@@ -312,6 +331,29 @@ class IncipitApi {
       .then(resJson => this.interceptInstall(resJson))
       .then(resJson => ErrorParser().interceptErrorResp(resJson))
       .then(resJson => this.interceptInvalidType(resJson, 'login_admin'))
+  }
+
+  /**
+   * Get is logged in or not
+   */
+  isLogin (): Promise<any> {
+    const url = new URL('login', this.apiBaseUrl)
+    const req = new Request(
+      url.href,
+      {
+        method: 'GET',
+        headers: {
+          authorization: 'Bearer ' + TokenStore.accessToken
+        }
+      }
+    )
+
+    return fetch(req)
+      .then(res => res.json())
+      .then(resJson => this.interceptInstall(resJson))
+      .then(resJson => this.interceptAuthorize(resJson, () => this.isLogin()))
+      .then(resJson => ErrorParser().interceptErrorResp(resJson))
+      .then(resJson => this.interceptInvalidType(resJson, 'is_login'))
   }
 
   /**

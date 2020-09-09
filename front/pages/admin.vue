@@ -258,21 +258,25 @@ export default class AdminList extends Vue {
       // Load admins
       this.isGetQueued = true
       IncipitApi(this.$router)
-        .getAdmins()
-        .then((resJson: any) => {
-          const resAdmins = resJson?.admin_users
-          resAdmins.forEach((resAdmin: any) => {
-            return this.adminItems.push(
-              new AdminItem(
-                resAdmin?.id,
-                resAdmin?.name,
-                resAdmin?.screen_name
-              )
-            )
-          })
-        })
-        .finally(() => {
-          this.isGetQueued = false
+        .isLogin()
+        .then(() => {
+          IncipitApi(this.$router)
+            .getAdmins()
+            .then((resJson: any) => {
+              const resAdmins = resJson?.admin_users
+              resAdmins.forEach((resAdmin: any) => {
+                return this.adminItems.push(
+                  new AdminItem(
+                    resAdmin?.id,
+                    resAdmin?.name,
+                    resAdmin?.screen_name
+                  )
+                )
+              })
+            })
+            .finally(() => {
+              this.isGetQueued = false
+            })
         })
     }
 

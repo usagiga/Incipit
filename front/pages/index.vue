@@ -21,11 +21,17 @@
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator'
+import IncipitApi from '~/utils/incipit-api'
 
   @Component({
     layout: 'blank'
   })
 export default class Index extends Vue {
+  // noinspection JSUnusedGlobalSymbols
+  mounted () {
+    IncipitApi(this.$router).isInstalled()
+  }
+
   head () {
     return {
       title: 'Incipit',

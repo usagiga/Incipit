@@ -323,21 +323,25 @@ export default class LinkList extends Vue {
       // Load links
       this.isGetQueued = true
       IncipitApi(this.$router)
-        .getLinks()
-        .then((resJson: any) => {
-          const resLinks = resJson?.links
-          resLinks.forEach((resLink: any) => {
-            return this.linkItems.push(
-              new LinkItem(
-                resLink?.id,
-                resLink?.short_id,
-                resLink?.url
-              )
-            )
-          })
-        })
-        .finally(() => {
-          this.isGetQueued = false
+        .isLogin()
+        .then(() => {
+          IncipitApi(this.$router)
+            .getLinks()
+            .then((resJson: any) => {
+              const resLinks = resJson?.links
+              resLinks.forEach((resLink: any) => {
+                return this.linkItems.push(
+                  new LinkItem(
+                    resLink?.id,
+                    resLink?.short_id,
+                    resLink?.url
+                  )
+                )
+              })
+            })
+            .finally(() => {
+              this.isGetQueued = false
+            })
         })
     }
 

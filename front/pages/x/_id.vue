@@ -55,13 +55,17 @@ export default class ShortID extends Vue {
       // Get link info through API
       this.isGetQueued = true
       IncipitApi(this.$router)
-        .getLinkByShortID(this.shortId)
-        .then((resJson: any) => {
-          const resLink = resJson?.link
-          this.destUrl = resLink?.url
-        })
-        .finally(() => {
-          this.isGetQueued = false
+        .isInstalled()
+        .then(() => {
+          IncipitApi(this.$router)
+            .getLinkByShortID(this.shortId)
+            .then((resJson: any) => {
+              const resLink = resJson?.link
+              this.destUrl = resLink?.url
+            })
+            .finally(() => {
+              this.isGetQueued = false
+            })
         })
     }
 
