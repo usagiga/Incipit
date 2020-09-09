@@ -13,6 +13,10 @@ import (
 	"time"
 )
 
+func TestInstallerHandlerImpl_HandleIsInstalled(t *testing.T) {
+	// NOP
+}
+
 func TestInstallerHandlerImpl_HandleInstall(t *testing.T) {
 	ih := NewInstallHandler(&installModelStub{})
 

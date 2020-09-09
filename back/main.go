@@ -55,6 +55,7 @@ func main() {
 	normalScenarioGroup := router.Group("/")
 	normalScenarioGroup.Use(installInterceptor.HandleNeededInstall)
 
+	// /api/admin
 	adminUserGroup := normalScenarioGroup.Group("/api/admin/")
 	adminUserGroup.Use(authInterceptor.Handle)
 	adminUserGroup.GET("/", adminUserHandler.HandleGetAdmin)
@@ -62,10 +63,13 @@ func main() {
 	adminUserGroup.PATCH("/", adminUserHandler.HandleUpdateAdmin)
 	adminUserGroup.DELETE("/", adminUserHandler.HandleDeleteAdmin)
 
+	// /api/login
 	loginGroup := normalScenarioGroup.Group("/api/login")
+	loginGroup.GET("/", adminAuthHandler.HandleIsLogin)
 	loginGroup.POST("/", adminAuthHandler.HandleLogin)
 	loginGroup.POST("/refresh", adminAuthHandler.HandleRefreshToken)
 
+	// /api/link
 	linkGroup := normalScenarioGroup.Group("/api/link")
 	linkGroup.Use(authInterceptor.Handle)
 	linkGroup.GET("/", linkHandler.HandleGetLink)
@@ -74,8 +78,10 @@ func main() {
 	linkGroup.DELETE("/", linkHandler.HandleDeleteLink)
 	normalScenarioGroup.GET("/api/link/shortened", linkHandler.HandleGetLinkByShortURL) // Unnecessary auth
 
+	// /api/install
 	installerGroup := router.Group("/api/install")
 	installerGroup.Use(installInterceptor.HandleRedundantInstall)
+	normalScenarioGroup.GET("/api/install", installHandler.HandleIsInstalled) // Necessary install check
 	installerGroup.POST("/", installHandler.HandleInstall)
 
 	// Launch

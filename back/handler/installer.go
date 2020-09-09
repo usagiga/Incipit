@@ -15,6 +15,13 @@ func NewInstallHandler(installerModel model.InstallerModel) InstallerHandler {
 	return &InstallerHandlerImpl{installerModel: installerModel}
 }
 
+func (h *InstallerHandlerImpl) HandleIsInstalled(c *gin.Context) {
+	res := messages.NewGetInstallResponse()
+	sCode := res.GetHTTPStatusCode()
+
+	c.JSON(sCode, res)
+}
+
 func (h *InstallerHandlerImpl) HandleInstall(c *gin.Context) {
 	req := &messages.InstallRequest{}
 	err := c.ShouldBindJSON(req)

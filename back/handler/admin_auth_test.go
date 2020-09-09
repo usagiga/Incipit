@@ -13,6 +13,10 @@ import (
 	"time"
 )
 
+func TestAdminAuthHandlerImpl_HandleIsLogin(t *testing.T) {
+	// NOP
+}
+
 func TestAdminAuthHandlerImpl_HandleLogin(t *testing.T) {
 	aai := NewAdminAuthHandler(&adminAuthModelStub{})
 

@@ -15,6 +15,13 @@ func NewAdminAuthHandler(adminAuthModel model.AdminAuthModel) AdminAuthHandler {
 	return &AdminAuthHandlerImpl{adminAuthModel: adminAuthModel}
 }
 
+func (h *AdminAuthHandlerImpl) HandleIsLogin(c *gin.Context) {
+	res := messages.NewGetLoginResponse()
+	sCode := res.GetHTTPStatusCode()
+
+	c.JSON(sCode, res)
+}
+
 func (h *AdminAuthHandlerImpl) HandleLogin(c *gin.Context) {
 	req := &messages.LoginAdminAuthRequest{}
 	err := c.ShouldBindJSON(req)

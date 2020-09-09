@@ -14,6 +14,8 @@ type AdminUserHandler interface {
 }
 
 type AdminAuthHandler interface {
+	// GET /api/login
+	HandleIsLogin(c *gin.Context)
 	// POST /api/login
 	HandleLogin(c *gin.Context)
 	// POST /api/login/refresh
@@ -34,6 +36,8 @@ type LinkHandler interface {
 }
 
 type InstallerHandler interface {
+	// GET /api/install
+	HandleIsInstalled(c *gin.Context)
 	// POST /api/install
 	HandleInstall(c *gin.Context)
 }
