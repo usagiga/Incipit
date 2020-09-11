@@ -10,6 +10,7 @@ $ docker-compose up
 ```
 
 If you use Docker, Incipit runs on debug mode.
+This behavior will be fixed, but the schedule is postponed for personal reasons.
 
 See also [Docker](./docs/docker.md).
 Or [Install(WIP)](./docs/install.md).
